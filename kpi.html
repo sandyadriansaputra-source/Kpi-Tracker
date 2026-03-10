@@ -3,99 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPI Pegadaian - Digital Tracker</title>
+    <title>KPI Tracker Pegadaian Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --pgd-green: #006837; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; }
-        .header { background: linear-gradient(135deg, var(--pgd-green), #004d29); color: white; padding: 25px 15px; text-align: center; border-bottom: 5px solid var(--pgd-gold); position: sticky; top: 0; z-index: 100; }
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
-        .kpi-card { background: white; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #ddd; }
-        .komponen-title { background: #fafafa; padding: 15px; font-weight: bold; color: var(--pgd-green); border-bottom: 1px solid #eee; }
-        .card-body { padding: 15px; }
-        .data-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f1f1; font-size: 0.9rem; }
-        .label { color: #777; }
-        .value { font-weight: 600; }
-        .input-section { margin-top: 15px; display: flex; gap: 8px; background: #eef5f2; padding: 10px; border-radius: 10px; }
-        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-save { background: var(--pgd-green); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .pencapaian-footer { background: #fffdf5; padding: 12px; border-top: 1px solid #f9ebbe; }
-        .progress-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), var(--pgd-green)); transition: width 0.8s; }
-        #loader { text-align: center; padding: 50px; color: var(--pgd-green); }
+        :root { 
+            --pgd-hijau-botol: #003319; 
+            --pgd-green-gradient: linear-gradient(180deg, #004d29 0%, #002b16 100%);
+            --pgd-gold: #FDB913; 
+            --pgd-light: #f4f7f6; 
+        }
+        
+        body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; padding-bottom: 30px; }
+        
+        /* Header Premium Hijau Botol */
+        .header { 
+            background: var(--pgd-green-gradient); 
+            color: white; 
+            padding: 25px 15px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            text-align: center; 
+            border-bottom: 5px solid var(--pgd-gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        
+        .logo-img { max-width: 180px; height: auto; margin-bottom: 12px; }
+        .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
+
+        /* Mini Filter */
+        .filter-section { 
+            background: #ffffff; 
+            padding: 8px 12px; 
+            display: flex; 
+            gap: 6px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            position: sticky; 
+            top: 130px; 
+            z-index: 999;
+        }
+        
+        select { 
+            flex: 1; 
+            padding: 8px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            font-size: 0.75rem; 
+            color: var(--pgd-hijau-botol); 
+            font-weight: 700;
+            outline: none;
+        }
+
+        /* Container KPI */
+        .container { padding: 12px; max-width: 480px; margin: 0 auto; }
+        
+        .kpi-card { 
+            background: white; 
+            border-radius: 18px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
+            overflow: hidden; 
+            border: 1px solid #eef2f0; 
+        }
+
+        /* 1. Komponen */
+        .kpi-header { 
+            background: #fdfdfd; 
+            padding: 12px 15px; 
+            font-weight: 800; 
+            color: var(--pgd-hijau-botol); 
+            font-size: 0.95rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .kpi-header i { margin-right: 10px; color: var(--pgd-gold); }
+
+        .card-body { padding: 12px 15px; }
+
+        .data-row { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 6px 0; 
+            border-bottom: 1px dashed #f0f0f0; 
+            font-size: 0.85rem; 
+        }
+        .label { color: #6c757d; }
+        .value { font-weight: 700; color: #212529; }
+        .val-gap { color: #dc3545; }
+
+        /* Input Section */
+        .input-group { 
+            margin-top: 12px; 
+            display: flex; 
+            gap: 8px; 
+            background: #f4fbf8; 
+            padding: 10px; 
+            border-radius: 10px; 
+        }
+        input { flex: 1; padding: 10px; border: 1px solid #ccd6d1; border-radius: 6px; font-size: 0.9rem; text-align: center; outline: none; }
+        .btn-save { background: var(--pgd-hijau-botol); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-save:active { transform: scale(0.95); }
+
+        /* Footer Pencapaian */
+        .kpi-footer { background: #fffef7; padding: 12px 15px; border-top: 1px solid #f9ebbe; }
+        .progress-label { font-size: 0.7rem; font-weight: 800; color: var(--pgd-hijau-botol); margin-bottom: 6px; display: block; }
+        .progress-bg { background: #e9ecef; height: 14px; border-radius: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); transition: width 1s ease-in-out; }
+
+        #loader { text-align: center; padding: 60px; color: var(--pgd-hijau-botol); font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>Target KPI Bulanan</h1>
-    <p>PT PEGADAIAN - Mobile Tracker</p>
+    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" alt="Logo Pegadaian" class="logo-img">
+    <h1>TARGET KPI BULANAN</h1>
 </div>
 
-<div class="container" id="app">
-    <div id="loader"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Sinkronisasi Data...</p></div>
+<div class="filter-section">
+    <select id="sel-kat" onchange="filterData()">
+        <option value="all">Kategori: Semua</option>
+    </select>
+    <select id="sel-unit" onchange="filterData()">
+        <option value="all">Unit: Semua</option>
+    </select>
+</div>
+
+<div class="container" id="display-area">
+    <div id="loader">
+        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
+        Menghubungkan G-Sheets...
+    </div>
 </div>
 
 <script>
-    // GANTI URL INI dengan URL Web App (Script ID) Bapak
-    const API_URL = "https://script.google.com/macros/s/AKfycbyhDMqNAOczrEtE_HEQ4AcavD9RCVppYK9P7kOGavsDasItsX6aSJsmsjKgamcoLtYR1A/exec";
+    // LINK API BAPAK SUDAH AKTIF
+    const API = "https://script.google.com/macros/s/AKfycbyhDMqNAOczrEtE_HEQ4AcavD9RCVppYK9P7kOGavsDasItsX6aSJsmsjKgamcoLtYR1A/exec"; 
+    let rawData = [];
 
-    async function fetchData() {
-        const response = await fetch(`${API_URL}?action=read`);
-        const data = await response.json();
-        render(data);
+    async function init() {
+        try {
+            const res = await fetch(`${API}?action=read`);
+            rawData = await res.json();
+            setupFilters(rawData);
+            render(rawData);
+        } catch (e) {
+            document.getElementById('display-area').innerHTML = "<div style='text-align:center;color:red;padding:20px;'>Gagal Sinkronisasi Data.</div>";
+        }
+    }
+
+    function setupFilters(data) {
+        const kSelect = document.getElementById('sel-kat');
+        const uSelect = document.getElementById('sel-unit');
+        
+        // Simpan state pilihan saat ini agar tidak reset saat refresh
+        const currentK = kSelect.value;
+        const currentU = uSelect.value;
+
+        const kats = [...new Set(data.map(d => d.kategori))];
+        const units = [...new Set(data.map(d => d.unit))];
+        
+        kSelect.innerHTML = '<option value="all">Kategori: Semua</option>';
+        uSelect.innerHTML = '<option value="all">Unit: Semua</option>';
+        
+        kats.forEach(k => kSelect.innerHTML += `<option value="${k}" ${k==currentK?'selected':''}>${k}</option>`);
+        units.forEach(u => uSelect.innerHTML += `<option value="${u}" ${u==currentU?'selected':''}>${u}</option>`);
+    }
+
+    function filterData() {
+        const kVal = document.getElementById('sel-kat').value;
+        const uVal = document.getElementById('sel-unit').value;
+        const filtered = rawData.filter(d => {
+            return (kVal === "all" || d.kategori === kVal) && (uVal === "all" || d.unit === uVal);
+        });
+        render(filtered);
     }
 
     function render(data) {
-        const container = document.getElementById('app');
+        const container = document.getElementById('display-area');
         container.innerHTML = '';
         data.forEach(item => {
+            const ach = parseFloat(item.persentase);
             const card = document.createElement('div');
             card.className = 'kpi-card';
             card.innerHTML = `
-                <div class="komponen-title"><i class="fas fa-cube"></i> ${item.komponen}</div>
+                <div class="kpi-header"><i class="fas fa-layer-group"></i> ${item.komponen}</div>
                 <div class="card-body">
-                    <div class="data-row"><span class="label">1. Bobot</span><span class="value">${item.bobot}%</span></div>
-                    <div class="data-row"><span class="label">2. Target</span><span class="value">${item.target.toLocaleString()}</span></div>
-                    <div class="data-row"><span class="label">3. Realisasi</span><span class="value">${item.realisasi.toLocaleString()}</span></div>
-                    <div class="data-row"><span class="label">4. Kekurangan</span><span class="value" style="color:red">${item.kekurangan.toLocaleString()}</span></div>
-                    <div class="input-section">
-                        <input type="number" id="in-${item.rowIdx}" placeholder="Input Realisasi Baru">
-                        <button class="btn-save" onclick="sendData(${item.rowIdx})">SAVE</button>
+                    <div class="data-row"><span class="label">2. Bobot</span><span class="value">${item.bobot}%</span></div>
+                    <div class="data-row"><span class="label">3. Target</span><span class="value">${item.target.toLocaleString('id-ID')}</span></div>
+                    <div class="data-row"><span class="label">4. Realisasi</span><span class="value">${item.realisasi.toLocaleString('id-ID')}</span></div>
+                    <div class="data-row"><span class="label">5. Kekurangan</span><span class="value val-gap">${item.kekurangan.toLocaleString('id-ID')}</span></div>
+                    
+                    <div class="input-group">
+                        <input type="number" id="in-${item.rowIdx}" placeholder="Input Baru">
+                        <button class="btn-save" onclick="updateData(this, ${item.rowIdx})">SAVE</button>
                     </div>
                 </div>
-                <div class="pencapaian-footer">
-                    <div style="font-size:0.75rem; font-weight:bold; color:var(--pgd-green)">5. PERSENTASE PENCAPAIAN: ${item.persentase}%</div>
-                    <div class="progress-bg"><div class="progress-fill" style="width:${Math.min(item.persentase,100)}%"></div></div>
+                <div class="kpi-footer">
+                    <span class="progress-label">6. PENCAPAIAN: ${ach}%</span>
+                    <div class="progress-bg"><div class="progress-fill" style="width: ${Math.min(ach, 100)}%"></div></div>
                 </div>
             `;
             container.appendChild(card);
         });
     }
 
-    async function sendData(rowIdx) {
-        const val = document.getElementById(`in-${rowIdx}`).value;
-        if(!val) return alert("Isi angka dulu, Pak.");
+    async function updateData(btn, idx) {
+        const val = document.getElementById(`in-${idx}`).value;
+        if(!val) return alert("Isi nilai dulu.");
         
-        const btn = event.target;
-        btn.disabled = true; btn.innerText = "...";
+        const oldText = btn.innerText;
+        btn.innerText = "...";
+        btn.disabled = true;
 
         try {
-            await fetch(API_URL, {
+            await fetch(API, {
                 method: 'POST',
-                mode: 'no-cors', // Penting untuk Apps Script
-                body: JSON.stringify({ rowIdx: rowIdx, value: val })
+                mode: 'no-cors',
+                body: JSON.stringify({ rowIdx: idx, value: val })
             });
-            alert("Data sedang diproses ke Google Sheets!");
-            setTimeout(fetchData, 2000); // Refresh data
+            alert("Data berhasil tersimpan di kolom baru!");
+            init(); // Refresh data otomatis
         } catch (e) {
-            alert("Gagal mengirim data.");
-        } finally {
-            btn.disabled = false; btn.innerText = "SAVE";
+            alert("Terjadi kesalahan.");
+            btn.innerText = oldText;
+            btn.disabled = false;
         }
     }
-
-    window.onload = fetchData;
+    window.onload = init;
 </script>
 </body>
 </html>
