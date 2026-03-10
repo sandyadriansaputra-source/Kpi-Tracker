@@ -12,107 +12,65 @@
             --pgd-gold: #FDB913; 
             --pgd-light: #f4f7f6; 
         }
-        
         body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; padding-bottom: 30px; }
         
-        /* Header Premium Hijau Botol */
-        .header { 
-            background: var(--pgd-green-gradient); 
-            color: white; 
-            padding: 25px 15px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            text-align: center; 
-            border-bottom: 5px solid var(--pgd-gold);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        
-        .logo-img { max-width: 180px; height: auto; margin-bottom: 12px; }
+        /* Header */
+        .header { background: var(--pgd-green-gradient); color: white; padding: 25px 15px; display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 5px solid var(--pgd-gold); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .logo-img { max-width: 170px; height: auto; margin-bottom: 12px; }
         .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; }
-
-        /* Mini Filter */
-        .filter-section { 
-            background: #ffffff; 
-            padding: 8px 12px; 
-            display: flex; 
-            gap: 6px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-            position: sticky; 
-            top: 130px; 
-            z-index: 999;
-        }
         
-        select { 
-            flex: 1; 
-            padding: 8px; 
-            border-radius: 8px; 
-            border: 1px solid #ddd; 
-            font-size: 0.75rem; 
-            color: var(--pgd-hijau-botol); 
-            font-weight: 700;
-            outline: none;
-        }
+        /* Filter Section */
+        .filter-section { background: #ffffff; padding: 8px 12px; display: flex; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); position: sticky; top: 125px; z-index: 999; }
+        select { flex: 1; padding: 8px; border-radius: 8px; border: 1px solid #ddd; font-size: 0.75rem; color: var(--pgd-hijau-botol); font-weight: 700; outline: none; }
 
-        /* Container KPI */
         .container { padding: 12px; max-width: 480px; margin: 0 auto; }
         
-        .kpi-card { 
-            background: white; 
-            border-radius: 18px; 
-            margin-bottom: 15px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06); 
-            overflow: hidden; 
-            border: 1px solid #eef2f0; 
-        }
-
-        /* 1. Komponen */
-        .kpi-header { 
-            background: #fdfdfd; 
-            padding: 12px 15px; 
-            font-weight: 800; 
-            color: var(--pgd-hijau-botol); 
-            font-size: 0.95rem;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
+        /* KPI Card */
+        .kpi-card { background: white; border-radius: 18px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); overflow: hidden; border: 1px solid #eef2f0; }
+        .kpi-header { background: #fdfdfd; padding: 12px 15px; font-weight: 800; color: var(--pgd-hijau-botol); font-size: 0.95rem; border-bottom: 1px solid #eee; display: flex; align-items: center; }
         .kpi-header i { margin-right: 10px; color: var(--pgd-gold); }
-
         .card-body { padding: 12px 15px; }
-
-        .data-row { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 6px 0; 
-            border-bottom: 1px dashed #f0f0f0; 
-            font-size: 0.85rem; 
-        }
+        .data-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #f0f0f0; font-size: 0.85rem; }
         .label { color: #6c757d; }
         .value { font-weight: 700; color: #212529; }
-        .val-gap { color: #dc3545; }
-
-        /* Input Section */
-        .input-group { 
-            margin-top: 12px; 
-            display: flex; 
-            gap: 8px; 
-            background: #f4fbf8; 
-            padding: 10px; 
-            border-radius: 10px; 
-        }
+        
+        /* Input Area */
+        .input-group { margin-top: 12px; display: flex; gap: 8px; background: #f4fbf8; padding: 10px; border-radius: 10px; }
         input { flex: 1; padding: 10px; border: 1px solid #ccd6d1; border-radius: 6px; font-size: 0.9rem; text-align: center; outline: none; }
-        .btn-save { background: var(--pgd-hijau-botol); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn-save:active { transform: scale(0.95); }
-
-        /* Footer Pencapaian */
+        .btn-save { background: var(--pgd-hijau-botol); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.75rem; }
+        
+        /* Footer Card */
         .kpi-footer { background: #fffef7; padding: 12px 15px; border-top: 1px solid #f9ebbe; }
         .progress-label { font-size: 0.7rem; font-weight: 800; color: var(--pgd-hijau-botol); margin-bottom: 6px; display: block; }
         .progress-bg { background: #e9ecef; height: 14px; border-radius: 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); transition: width 1s ease-in-out; }
+
+        /* --- NOTIF MODE PRO --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #ffffff; /* Latar Putih */
+            color: var(--pgd-hijau-botol); /* Teks Hijau Botol */
+            text-align: center;
+            border-radius: 50px; /* Bentuk Kapsul */
+            padding: 12px 20px;
+            position: fixed;
+            z-index: 2000;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            font-weight: 800;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid var(--pgd-hijau-botol); /* Outline Hijau */
+            opacity: 0;
+            transition: opacity 0.4s, visibility 0.4s, bottom 0.4s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
 
         #loader { text-align: center; padding: 60px; color: var(--pgd-hijau-botol); font-weight: bold; }
     </style>
@@ -120,28 +78,32 @@
 <body>
 
 <div class="header">
-    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" alt="Logo Pegadaian" class="logo-img">
+    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" alt="Logo" class="logo-img">
     <h1>TARGET KPI BULANAN</h1>
 </div>
 
 <div class="filter-section">
     <select id="sel-kat" onchange="filterData()">
-        <option value="all">Kategori: Semua</option>
+        <option value="all">KATEGORI: SEMUA</option>
+        <option value="CP">CP</option>
+        <option value="UPC">UPC</option>
     </select>
     <select id="sel-unit" onchange="filterData()">
-        <option value="all">Unit: Semua</option>
+        <option value="all">UNIT: SEMUA</option>
+        <option value="WONOMULYO">WONOMULYO</option>
+        <option value="LUYO">LUYO</option>
+        <option value="SIDODADI">SIDODADI</option>
+        <option value="JATIWARNA">JATIWARNA</option>
     </select>
 </div>
 
 <div class="container" id="display-area">
-    <div id="loader">
-        <i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>
-        Menghubungkan G-Sheets...
-    </div>
+    <div id="loader"><i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Sinkronisasi Database...</div>
 </div>
 
+<div id="toast">Berhasil Terakumulasi!</div>
+
 <script>
-    // LINK API BAPAK SUDAH AKTIF
     const API = "https://script.google.com/macros/s/AKfycbyhDMqNAOczrEtE_HEQ4AcavD9RCVppYK9P7kOGavsDasItsX6aSJsmsjKgamcoLtYR1A/exec"; 
     let rawData = [];
 
@@ -149,54 +111,45 @@
         try {
             const res = await fetch(`${API}?action=read`);
             rawData = await res.json();
-            setupFilters(rawData);
-            render(rawData);
+            filterData();
         } catch (e) {
-            document.getElementById('display-area').innerHTML = "<div style='text-align:center;color:red;padding:20px;'>Gagal Sinkronisasi Data.</div>";
+            document.getElementById('display-area').innerHTML = "Gagal memuat data.";
         }
     }
 
-    function setupFilters(data) {
-        const kSelect = document.getElementById('sel-kat');
-        const uSelect = document.getElementById('sel-unit');
-        
-        // Simpan state pilihan saat ini agar tidak reset saat refresh
-        const currentK = kSelect.value;
-        const currentU = uSelect.value;
-
-        const kats = [...new Set(data.map(d => d.kategori))];
-        const units = [...new Set(data.map(d => d.unit))];
-        
-        kSelect.innerHTML = '<option value="all">Kategori: Semua</option>';
-        uSelect.innerHTML = '<option value="all">Unit: Semua</option>';
-        
-        kats.forEach(k => kSelect.innerHTML += `<option value="${k}" ${k==currentK?'selected':''}>${k}</option>`);
-        units.forEach(u => uSelect.innerHTML += `<option value="${u}" ${u==currentU?'selected':''}>${u}</option>`);
-    }
-
     function filterData() {
-        const kVal = document.getElementById('sel-kat').value;
-        const uVal = document.getElementById('sel-unit').value;
+        const kVal = document.getElementById('sel-kat').value.toUpperCase();
+        const uVal = document.getElementById('sel-unit').value.toUpperCase();
+
         const filtered = rawData.filter(d => {
-            return (kVal === "all" || d.kategori === kVal) && (uVal === "all" || d.unit === uVal);
+            const itemKat = String(d.kategori || "").toUpperCase().trim();
+            const itemUnit = String(d.unit || "").toUpperCase().trim();
+            const matchKat = (kVal === "ALL" || itemKat.includes(kVal));
+            const matchUnit = (uVal === "ALL" || itemUnit.includes(uVal));
+            return matchKat && matchUnit;
         });
         render(filtered);
     }
 
     function render(data) {
         const container = document.getElementById('display-area');
-        container.innerHTML = '';
+        container.innerHTML = data.length ? '' : '<p style="text-align:center; padding:20px; color:#666;">Data tidak ditemukan.</p>';
+        
         data.forEach(item => {
-            const ach = parseFloat(item.persentase);
+            const ach = parseFloat(item.persentase) || 0;
+            const gapVal = item.target - item.realisasi;
+            const gapColor = gapVal > 0 ? "red" : "black"; 
+            const displayGap = Math.abs(gapVal);
+
             const card = document.createElement('div');
             card.className = 'kpi-card';
             card.innerHTML = `
                 <div class="kpi-header"><i class="fas fa-layer-group"></i> ${item.komponen}</div>
                 <div class="card-body">
-                    <div class="data-row"><span class="label">2. Bobot</span><span class="value">${item.bobot}%</span></div>
-                    <div class="data-row"><span class="label">3. Target</span><span class="value">${item.target.toLocaleString('id-ID')}</span></div>
-                    <div class="data-row"><span class="label">4. Realisasi</span><span class="value">${item.realisasi.toLocaleString('id-ID')}</span></div>
-                    <div class="data-row"><span class="label">5. Kekurangan</span><span class="value val-gap">${item.kekurangan.toLocaleString('id-ID')}</span></div>
+                    <div class="data-row"><span class="label">Bobot</span><span class="value">${item.bobot}%</span></div>
+                    <div class="data-row"><span class="label">Target</span><span class="value">${Number(item.target).toLocaleString('id-ID')}</span></div>
+                    <div class="data-row"><span class="label">Realisasi</span><span class="value" id="real-${item.rowIdx}">${Number(item.realisasi).toLocaleString('id-ID')}</span></div>
+                    <div class="data-row"><span class="label">Kekurangan</span><span class="value" id="gap-${item.rowIdx}" style="color: ${gapColor}; font-weight:700;">${displayGap.toLocaleString('id-ID')}</span></div>
                     
                     <div class="input-group">
                         <input type="number" id="in-${item.rowIdx}" placeholder="Input Baru">
@@ -204,7 +157,7 @@
                     </div>
                 </div>
                 <div class="kpi-footer">
-                    <span class="progress-label">6. PENCAPAIAN: ${ach}%</span>
+                    <span class="progress-label">PENCAPAIAN: ${ach}%</span>
                     <div class="progress-bg"><div class="progress-fill" style="width: ${Math.min(ach, 100)}%"></div></div>
                 </div>
             `;
@@ -212,26 +165,46 @@
         });
     }
 
+    // FUNGSI NOTIF PRO MODE
+    function showProNotif(msg) {
+        const x = document.getElementById("toast");
+        x.innerText = msg;
+        x.className = "show";
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+    }
+
     async function updateData(btn, idx) {
-        const val = document.getElementById(`in-${idx}`).value;
-        if(!val) return alert("Isi nilai dulu.");
-        
-        const oldText = btn.innerText;
-        btn.innerText = "...";
-        btn.disabled = true;
+        const inputEl = document.getElementById(`in-${idx}`);
+        const val = parseFloat(inputEl.value);
+        if(!val) {
+            showProNotif("⚠️ Harap isi angka!");
+            return;
+        }
+
+        btn.innerText = "..."; btn.disabled = true;
 
         try {
-            await fetch(API, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ rowIdx: idx, value: val })
-            });
-            alert("Data berhasil tersimpan di kolom baru!");
-            init(); // Refresh data otomatis
+            await fetch(API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ rowIdx: idx, value: val }) });
+
+            const item = rawData.find(d => d.rowIdx === idx);
+            if (item) {
+                item.realisasi = parseFloat(item.realisasi) + val;
+                const newGap = item.target - item.realisasi;
+                
+                document.getElementById(`real-${idx}`).innerText = Number(item.realisasi).toLocaleString('id-ID');
+                const gapEl = document.getElementById(`gap-${idx}`);
+                gapEl.innerText = Math.abs(newGap).toLocaleString('id-ID');
+                gapEl.style.color = newGap > 0 ? "red" : "black";
+            }
+
+            showProNotif("✅ Berhasil Terakumulasi!"); // Panggil Notif Pro
+            inputEl.value = "";
+            btn.innerText = "SAVE"; btn.disabled = false;
+            setTimeout(init, 2000); 
+
         } catch (e) {
-            alert("Terjadi kesalahan.");
-            btn.innerText = oldText;
-            btn.disabled = false;
+            showProNotif("❌ Terjadi Kesalahan!");
+            btn.innerText = "SAVE"; btn.disabled = false;
         }
     }
     window.onload = init;
