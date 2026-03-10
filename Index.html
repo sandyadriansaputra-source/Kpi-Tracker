@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Pegadaian - Digital Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --pgd-green: #006837; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; }
+        .header { background: linear-gradient(135deg, var(--pgd-green), #004d29); color: white; padding: 25px 15px; text-align: center; border-bottom: 5px solid var(--pgd-gold); position: sticky; top: 0; z-index: 100; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
+        .kpi-card { background: white; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #ddd; }
+        .komponen-title { background: #fafafa; padding: 15px; font-weight: bold; color: var(--pgd-green); border-bottom: 1px solid #eee; }
+        .card-body { padding: 15px; }
+        .data-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f1f1; font-size: 0.9rem; }
+        .label { color: #777; }
+        .value { font-weight: 600; }
+        .input-section { margin-top: 15px; display: flex; gap: 8px; background: #eef5f2; padding: 10px; border-radius: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn-save { background: var(--pgd-green); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .pencapaian-footer { background: #fffdf5; padding: 12px; border-top: 1px solid #f9ebbe; }
+        .progress-bg { background: #eee; height: 12px; border-radius: 6px; overflow: hidden; margin-top: 5px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), var(--pgd-green)); transition: width 0.8s; }
+        #loader { text-align: center; padding: 50px; color: var(--pgd-green); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Target KPI Bulanan</h1>
+    <p>PT PEGADAIAN - Mobile Tracker</p>
+</div>
+
+<div class="container" id="app">
+    <div id="loader"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Sinkronisasi Data...</p></div>
+</div>
+
+<script>
+    // GANTI URL INI dengan URL Web App (Script ID) Bapak
+    const API_URL = "https://script.google.com/macros/s/AKfycbyhDMqNAOczrEtE_HEQ4AcavD9RCVppYK9P7kOGavsDasItsX6aSJsmsjKgamcoLtYR1A/exec";
+
+    async function fetchData() {
+        const response = await fetch(`${API_URL}?action=read`);
+        const data = await response.json();
+        render(data);
+    }
+
+    function render(data) {
+        const container = document.getElementById('app');
+        container.innerHTML = '';
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'kpi-card';
+            card.innerHTML = `
+                <div class="komponen-title"><i class="fas fa-cube"></i> ${item.komponen}</div>
+                <div class="card-body">
+                    <div class="data-row"><span class="label">1. Bobot</span><span class="value">${item.bobot}%</span></div>
+                    <div class="data-row"><span class="label">2. Target</span><span class="value">${item.target.toLocaleString()}</span></div>
+                    <div class="data-row"><span class="label">3. Realisasi</span><span class="value">${item.realisasi.toLocaleString()}</span></div>
+                    <div class="data-row"><span class="label">4. Kekurangan</span><span class="value" style="color:red">${item.kekurangan.toLocaleString()}</span></div>
+                    <div class="input-section">
+                        <input type="number" id="in-${item.rowIdx}" placeholder="Input Realisasi Baru">
+                        <button class="btn-save" onclick="sendData(${item.rowIdx})">SAVE</button>
+                    </div>
+                </div>
+                <div class="pencapaian-footer">
+                    <div style="font-size:0.75rem; font-weight:bold; color:var(--pgd-green)">5. PERSENTASE PENCAPAIAN: ${item.persentase}%</div>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${Math.min(item.persentase,100)}%"></div></div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    async function sendData(rowIdx) {
+        const val = document.getElementById(`in-${rowIdx}`).value;
+        if(!val) return alert("Isi angka dulu, Pak.");
+        
+        const btn = event.target;
+        btn.disabled = true; btn.innerText = "...";
+
+        try {
+            await fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Penting untuk Apps Script
+                body: JSON.stringify({ rowIdx: rowIdx, value: val })
+            });
+            alert("Data sedang diproses ke Google Sheets!");
+            setTimeout(fetchData, 2000); // Refresh data
+        } catch (e) {
+            alert("Gagal mengirim data.");
+        } finally {
+            btn.disabled = false; btn.innerText = "SAVE";
+        }
+    }
+
+    window.onload = fetchData;
+</script>
+</body>
+</html>
