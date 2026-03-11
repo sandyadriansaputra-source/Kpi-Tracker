@@ -150,7 +150,7 @@
 
         const totalScore = filtered.reduce((acc, curr) => acc + parseFloat(curr.nilaiKpi), 0);
         document.getElementById('summary-area').style.display = 'flex';
-        document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+        document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
         render(filtered);
     }
