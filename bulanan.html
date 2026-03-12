@@ -8,7 +8,7 @@
     <style>
         :root { --pgd-hijau-botol: #003319; --pgd-green-gradient: linear-gradient(180deg, #004d29 0%, #002b16 100%); --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; padding-bottom: 80px; }
-        .header { background: var(--pgd-green-gradient); color: white; padding: 10px 15px; display: flex; flex-direction: column; align-items: center; border-bottom: 4px solid var(--pgd-gold); position: sticky; top: 0; z-index: 1000; }
+        .header { background: var(--pgd-green-gradient); color: white; padding: 10px 15px; display: flex; flex-direction: column; align-items: center; border-bottom: 4px solid var(--pgd-gold); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .logo-img { max-width: 120px; height: auto; margin-bottom: 4px; }
         .header h1 { margin: 0; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
         .summary-card { background: white; margin: 8px auto; max-width: 220px; border-radius: 50px; padding: 4px 15px; display: flex; justify-content: center; align-items: center; gap: 10px; border: 1.5px solid var(--pgd-gold); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
@@ -26,6 +26,7 @@
         .kpi-footer { background: #fffef7; padding: 10px 12px; border-top: 1px solid #f9ebbe; }
         .progress-bg { background: #e9ecef; height: 10px; border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); }
+        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1001; }
         .nav-item { text-align: center; color: #999; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--pgd-hijau-botol); }
@@ -46,10 +47,18 @@
     <select id="sel-unit" onchange="filterData()"><option value="all">UNIT: SEMUA</option><option value="WONOMULYO">WONOMULYO</option><option value="LUYO">LUYO</option><option value="SIDODADI">SIDODADI</option><option value="CAMPALAGIAN">CAMPALAGIAN</option><option value="PAMBUSUANG">PAMBUSUANG</option></select>
 </div>
 <div class="container" id="display-area"></div>
+
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><i class="fas fa-calendar-check"></i><span>Tahunan</span></a>
-    <a href="bulanan.html" class="nav-item"><i class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
+    <a href="index.html" class="nav-item">
+        <i class="fas fa-calendar-check"></i>
+        <span>Tahunan</span>
+    </a>
+    <a href="bulanan.html" class="nav-item active">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Bulanan</span>
+    </a>
 </nav>
+
 <div id="toast">Berhasil!</div>
 <script>
     const API = "https://script.google.com/macros/s/AKfycbyNuCUnFo4vqrWsLCktDxuvcwgYHATAmV0g-tLaAWaR04jBGbPgF_o0r2RvvliKGSolQw/exec"; 
