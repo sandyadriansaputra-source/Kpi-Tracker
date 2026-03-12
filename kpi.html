@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPI Tahunan</title>
+    <title>KPI Tahunan - Pegadaian</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --pgd-hijau-botol: #003319; --pgd-green-gradient: linear-gradient(180deg, #004d29 0%, #002b16 100%); --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
@@ -27,7 +27,7 @@
         .progress-bg { background: #e9ecef; height: 10px; border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); }
         
-        /* BOTTOM NAV STYLES */
+        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1001; }
         .nav-item { text-align: center; color: #999; text-decoration: none; flex: 1; }
         .nav-item.active { color: var(--pgd-hijau-botol); }
@@ -50,14 +50,8 @@
 <div class="container" id="display-area"></div>
 
 <nav class="bottom-nav">
-    <a href="index.html" class="nav-item active">
-        <i class="fas fa-calendar-check"></i>
-        <span>Tahunan</span>
-    </a>
-    <a href="bulanan.html" class="nav-item">
-        <i class="fas fa-calendar-alt"></i>
-        <span>Bulanan</span>
-    </a>
+    <a href="index.html" class="nav-item active"><i class="fas fa-calendar-check"></i><span>Tahunan</span></a>
+    <a href="bulanan.html" class="nav-item"><i class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
 </nav>
 
 <div id="toast">Berhasil!</div>
