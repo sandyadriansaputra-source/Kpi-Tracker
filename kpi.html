@@ -75,7 +75,7 @@
         const filtered = rawData.filter(d => (kVal === "ALL" || d.kategori.includes(kVal)) && (uVal === "ALL" || d.unit.includes(uVal)));
         const totalScore = filtered.reduce((acc, curr) => acc + parseFloat(curr.nilaiKpi), 0);
         document.getElementById('summary-area').style.display = 'flex';
-        document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {minimumFractionDigits: 2});
+        document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {minimumFractionDigits: 1});
         render(filtered);
     }
     function render(data) {
