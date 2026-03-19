@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Shortfall KPI</title>
+    <title>Laporan Shortfall UPC</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; --pgd-red: #dc3545; }
@@ -12,7 +12,6 @@
         .logo-img { max-width: 110px; }
         .header h1 { margin: 0; font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; }
 
-        /* MODIFIKASI PAPAN SKOR LEBIH KECIL */
         .summary-pill { background: white; margin: 8px auto; max-width: 180px; border-radius: 50px; padding: 3px 12px; display: flex; justify-content: center; align-items: center; gap: 6px; border: 1.2px solid var(--pgd-red); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .summary-label { font-size: 0.55rem; font-weight: 800; color: #666; text-transform: uppercase; }
         .summary-count { font-size: 0.95rem; font-weight: 900; color: var(--pgd-red); }
@@ -47,7 +46,7 @@
 
 <div class="header">
     <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
-    <h1>SHORTFALL KPI (< 100%)</h1>
+    <h1>UPC SHORTFALL (< 100%)</h1>
 </div>
 
 <div class="summary-pill">
@@ -76,12 +75,21 @@
     async function init() {
         const sheet = document.getElementById('sel-sheet').value;
         const display = document.getElementById('display-area');
-        display.innerHTML = '<div id="loader"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Menganalisis...</div>';
+        display.innerHTML = '<div id="loader"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Menganalisis UPC...</div>';
         
         try {
             const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`).then(r => r.json());
-            raw = res.items.filter(item => (parseFloat(item.persentase) || 0) < 100);
+            
+            // LOGIKA BARU: Filter Ach < 100% DAN BUKAN kategori CP
+            raw = res.items.filter(item => {
+                const achVal = parseFloat(item.persentase) || 0;
+                const isCP = item.kategori.toUpperCase().includes("CP");
+                return achVal < 100 && !isCP;
+            });
+
+            // Urutkan dari yang terendah
             raw.sort((a, b) => parseFloat(a.persentase) - parseFloat(b.persentase));
+            
             filter();
         } catch (e) { display.innerHTML = "Gagal memuat data."; }
     }
@@ -96,7 +104,7 @@
     function render(data) {
         const cont = document.getElementById('display-area');
         if (data.length === 0) {
-            cont.innerHTML = "<div style='text-align:center; padding:50px; color:green;'><i class='fas fa-check-circle fa-3x'></i><br><br><b>Luar Biasa!</b> Semua Komponen 100%</div>";
+            cont.innerHTML = "<div style='text-align:center; padding:50px; color:green;'><i class='fas fa-check-circle fa-3x'></i><br><br><b>Luar Biasa!</b> Semua UPC sudah 100%</div>";
             return;
         }
 
@@ -106,7 +114,7 @@
             return `
                 <div class="report-card">
                     <div class="card-top">
-                        <span class="unit-badge">${i.unit} (${i.kategori})</span>
+                        <span class="unit-badge">${i.unit}</span>
                         <span class="component-name">${i.komponen}</span>
                     </div>
                     <div class="card-body">
