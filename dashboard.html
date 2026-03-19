@@ -11,40 +11,16 @@
     <style>
         :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
         body { background-color: var(--pgd-light); font-family: 'Segoe UI', sans-serif; padding-bottom: 90px; }
-        
-        .pegadaian-header {
-            background: linear-gradient(180deg, #004d29 0%, #002b16 100%);
-            border-bottom: 4px solid var(--pgd-gold);
-            color: white; position: sticky; top: 0; z-index: 1020; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .pegadaian-header { background: linear-gradient(180deg, #004d29 0%, #002b16 100%); border-bottom: 4px solid var(--pgd-gold); color: white; position: sticky; top: 0; z-index: 1020; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .logo-img { max-width: 110px; height: auto; }
-        
         .kpi-card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; margin-bottom: 20px; }
-        .card-header { 
-            background: #fff; border-bottom: 1px solid #eee; font-weight: 800; 
-            color: var(--pgd-hijau); font-size: 0.75rem; text-transform: uppercase;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* Style List Skor CP */
+        .card-header { background: #fff; border-bottom: 1px solid #eee; font-weight: 800; color: var(--pgd-hijau); font-size: 0.75rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
         .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; }
-        .cp-item:last-child { border-bottom: none; }
         .cp-name { font-weight: 800; font-size: 0.75rem; color: var(--pgd-hijau); }
-        .cp-score { font-family: 'Segoe UI', sans-serif; font-weight: 900; font-size: 0.9rem; color: #333; }
+        .cp-score { font-weight: 900; font-size: 0.9rem; color: #333; }
         .label-score { font-size: 0.55rem; color: #999; display: block; text-align: right; margin-top: -3px; }
-
-        .section-divider { 
-            font-size: 0.7rem; font-weight: 900; color: #999; 
-            text-transform: uppercase; letter-spacing: 2px; border-left: 4px solid var(--pgd-gold);
-            padding-left: 10px; margin: 25px 0 15px 0;
-        }
-
-        #loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 2000;
-        }
-
+        .section-divider { font-size: 0.7rem; font-weight: 900; color: #999; text-transform: uppercase; letter-spacing: 2px; border-left: 4px solid var(--pgd-gold); padding-left: 10px; margin: 25px 0 15px 0; }
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1030; }
         .nav-item { text-align: center; color: #999; text-decoration: none; flex: 1; font-size: 0.65rem; font-weight: 700; }
         .nav-item.active { color: var(--pgd-hijau); }
@@ -53,154 +29,56 @@
     </style>
 </head>
 <body>
-
-<div id="loading-overlay">
-    <div class="spinner-border text-success" role="status"></div>
-    <span class="mt-2 fw-bold text-success">Mengkalkulasi Skor Unit...</span>
-</div>
-
+<div id="loading-overlay"><div class="spinner-border text-success" role="status"></div><span class="mt-2 fw-bold text-success">Mengkalkulasi Skor Unit...</span></div>
 <div class="pegadaian-header text-center py-3">
     <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img mb-1">
     <h1 class="m-0" style="font-size: 0.85rem; font-weight: 800;">DASHBOARD ANALISIS KPI</h1>
 </div>
-
 <div class="container py-3">
-    
     <div class="section-divider">REKAPITULASI SKOR CP (B / T)</div>
-    <div class="card kpi-card">
-        <div id="cp-list-container">
-            <div class="p-4 text-center text-muted small">Mengambil data satelit...</div>
-        </div>
-    </div>
-
+    <div class="card kpi-card"><div id="cp-list-container"></div></div>
     <div class="section-divider">PERFORMA TOTAL KPI UPC</div>
-    
-    <div class="card kpi-card">
-        <div class="card-header py-2">
-            <span><i class="fas fa-chart-bar me-1"></i> UPC - TOTAL BULANAN</span>
-        </div>
-        <div class="card-body p-2">
-            <canvas id="chartUPCBulanan" style="max-height: 250px;"></canvas>
-        </div>
-    </div>
-
-    <div class="card kpi-card">
-        <div class="card-header py-2">
-            <span><i class="fas fa-trophy me-1"></i> UPC - TOTAL TAHUNAN</span>
-        </div>
-        <div class="card-body p-2">
-            <canvas id="chartUPCTahunan" style="max-height: 250px;"></canvas>
-        </div>
-    </div>
-
+    <div class="card kpi-card"><div class="card-header py-2"><span>UPC - TOTAL BULANAN</span></div><div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 250px;"></canvas></div></div>
+    <div class="card kpi-card"><div class="card-header py-2"><span>UPC - TOTAL TAHUNAN</span></div><div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 250px;"></canvas></div></div>
 </div>
-
 <nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Grafik</span></a>
     <a href="kpi.html" class="nav-item"><i class="fas fa-calendar-check"></i><span>Tahunan</span></a>
     <a href="bulanan.html" class="nav-item"><i class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
-    <a href="dashboard.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Grafik</span></a>
 </nav>
-
 <script>
-    const API = "https://script.google.com/macros/s/AKfycbyNuCUnFo4vqrWsLCktDxuvcwgYHATAmV0g-tLaAWaR04jBGbPgF_o0r2RvvliKGSolQw/exec";
-    
-    // Daftarkan Plugin Datalabels secara global
+    const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
     Chart.register(ChartDataLabels);
-
-    function renderCPInfo(bulananItems, tahunanItems) {
-        const cpContainer = document.getElementById('cp-list-container');
-        cpContainer.innerHTML = "";
-        const cpMap = {};
-        
-        bulananItems.filter(item => item.kategori.includes("CP")).forEach(item => {
-            const unit = item.unit.toUpperCase();
-            if (!cpMap[unit]) cpMap[unit] = { b: 0, t: 0 };
-            cpMap[unit].b += parseFloat(item.nilaiKpi) || 0;
-        });
-
-        tahunanItems.filter(item => item.kategori.includes("CP")).forEach(item => {
-            const unit = item.unit.toUpperCase();
-            if (cpMap[unit]) cpMap[unit].t += parseFloat(item.nilaiKpi) || 0;
-        });
-
-        const units = Object.keys(cpMap).sort();
-        if(units.length === 0) { cpContainer.innerHTML = "<p class='p-3 small'>Data CP tidak ditemukan</p>"; return; }
-
-        units.forEach(unit => {
-            const scoreB = cpMap[unit].b.toLocaleString('id-ID', {maximumFractionDigits: 2});
-            const scoreT = cpMap[unit].t.toLocaleString('id-ID', {maximumFractionDigits: 2});
-            const div = document.createElement('div');
-            div.className = 'cp-item';
-            div.innerHTML = `<div class="cp-name">${unit}</div><div><div class="cp-score">${scoreB} / ${scoreT}</div><span class="label-score">SKOR B / T</span></div>`;
-            cpContainer.appendChild(div);
-        });
-    }
-
-    function processUPCData(items) {
-        const unitMap = {};
-        items.filter(item => item.kategori.includes("UPC")).forEach(item => {
-            const unit = item.unit.toUpperCase();
-            if (!unitMap[unit]) unitMap[unit] = 0;
-            unitMap[unit] += parseFloat(item.nilaiKpi) || 0;
-        });
-        const sorted = Object.entries(unitMap).sort((a, b) => b[1] - a[1]);
-        return { labels: sorted.map(u => u[0]), scores: sorted.map(u => u[1]) };
-    }
-
-    function createUPCChart(canvasId, dataObj, color) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dataObj.labels,
-                datasets: [{
-                    data: dataObj.scores,
-                    backgroundColor: color,
-                    borderRadius: 6,
-                    barThickness: 22
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false },
-                    // Konfigurasi Label Angka di Batang
-                    datalabels: {
-                        anchor: 'end',
-                        align: 'right',
-                        color: '#444',
-                        font: { weight: 'bold', size: 10 },
-                        formatter: (val) => val.toFixed(2)
-                    }
-                },
-                layout: { padding: { right: 35 } }, // Ruang untuk angka di kanan
-                scales: {
-                    x: { display: false, beginAtZero: true, max: 105 }, // Sembunyikan garis bawah agar bersih
-                    y: { ticks: { font: { weight: 'bold', size: 11 }, color: '#003319' }, grid: { display: false } }
-                }
-            }
-        });
-    }
-
     async function init() {
         try {
             const [resB, resT] = await Promise.all([
                 fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
                 fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
             ]);
-
-            renderCPInfo(resB.items, resT.items);
-            
-            // Warna Emas untuk Bulanan, Hijau Gelap untuk Tahunan
-            createUPCChart('chartUPCBulanan', processUPCData(resB.items), 'rgba(253, 185, 19, 0.9)');
-            createUPCChart('chartUPCTahunan', processUPCData(resT.items), 'rgba(0, 51, 25, 0.9)');
-
-        } catch (e) { console.error(e); }
-        finally { document.getElementById('loading-overlay').style.display = 'none'; }
+            renderCP(resB.items, resT.items);
+            createChart('chartUPCBulanan', processUPC(resB.items), '#FDB913');
+            createChart('chartUPCTahunan', processUPC(resT.items), '#003319');
+        } catch (e) { console.error(e); } finally { document.getElementById('loading-overlay').style.display = 'none'; }
     }
-
+    function renderCP(b, t) {
+        const cpMap = {};
+        b.filter(i => i.kategori.includes("CP")).forEach(i => { cpMap[i.unit] = { b: i.nilaiKpi, t: 0 }; });
+        t.filter(i => i.kategori.includes("CP")).forEach(i => { if(cpMap[i.unit]) cpMap[i.unit].t = i.nilaiKpi; });
+        const cont = document.getElementById('cp-list-container');
+        cont.innerHTML = Object.keys(cpMap).sort().map(u => `<div class="cp-item"><div class="cp-name">${u}</div><div><div class="cp-score">${cpMap[u].b.toFixed(2)} / ${cpMap[u].t.toFixed(2)}</div><span class="label-score">SKOR B / T</span></div></div>`).join('');
+    }
+    function processUPC(items) {
+        const m = {};
+        items.filter(i => i.kategori.includes("UPC")).forEach(i => { const u = i.unit.toUpperCase(); m[u] = (m[u] || 0) + i.nilaiKpi; });
+        const s = Object.entries(m).sort((a,b) => b[1]-a[1]);
+        return { l: s.map(x => x[0]), v: s.map(x => x[1]) };
+    }
+    function createChart(id, d, c) {
+        new Chart(document.getElementById(id), {
+            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: c, borderRadius: 6, barThickness: 22 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', font: { weight: 'bold', size: 10 }, formatter: v => v.toFixed(2) } }, scales: { x: { display: false, max: 105 }, y: { grid: { display: false } } } }
+        });
+    }
     window.onload = init;
 </script>
 </body>
