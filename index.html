@@ -11,33 +11,62 @@
     <style>
         :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
         body { background-color: var(--pgd-light); font-family: 'Segoe UI', sans-serif; padding-bottom: 95px; }
-        .pegadaian-header { background: linear-gradient(180deg, #004d29 0%, #002b16 100%); border-bottom: 4px solid var(--pgd-gold); color: white; position: sticky; top: 0; z-index: 1020; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .logo-img { max-width: 110px; height: auto; }
         
-        .kpi-card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; margin-bottom: 20px; overflow: hidden; }
-        .card-header { background: #fff; border-bottom: 1px solid #eee; font-weight: 800; color: var(--pgd-hijau); font-size: 0.75rem; text-transform: uppercase; padding: 10px 15px; }
+        /* FIX HEADER: Logo & Teks Rata Tengah Sempurna */
+        .pegadaian-header { 
+            background: linear-gradient(180deg, #004d29 0%, #002b16 100%); 
+            border-bottom: 4px solid var(--pgd-gold); 
+            color: white; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1020; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            /* Gunakan flex untuk centering */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px; /* Padding vertikal disesuaikan */
+        }
+        .logo-img { max-width: 110px; height: auto; display: block; }
+        .header-title { margin: 0; margin-top: 5px; font-size: 0.82rem; font-weight: 800; text-align: center; }
         
-        .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid #f0f0f0; }
-        .cp-name { font-weight: 800; font-size: 0.75rem; color: var(--pgd-hijau); }
-        .cp-score { font-weight: 900; font-size: 0.85rem; color: #333; letter-spacing: -0.2px; }
-        .label-score { font-size: 0.52rem; color: #999; display: block; text-align: right; margin-top: -2px; font-weight: 600; }
+        .data-date { 
+            font-size: 0.62rem; 
+            color: #888; 
+            text-align: center; 
+            font-style: italic; 
+            margin: 0px 0 8px 0; 
+            font-weight: 600; 
+            line-height: 1;
+        }
+
+        .container { padding-top: 10px !important; }
+
+        .kpi-card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; margin-bottom: 15px; overflow: hidden; }
+        .card-header { background: #fff; border-bottom: 1px solid #eee; font-weight: 800; color: var(--pgd-hijau); font-size: 0.72rem; text-transform: uppercase; padding: 8px 15px; }
+        
+        .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; }
+        .cp-name { font-weight: 800; font-size: 0.72rem; color: var(--pgd-hijau); }
+        .cp-score { font-weight: 900; font-size: 0.82rem; color: #333; letter-spacing: -0.2px; }
+        .label-score { font-size: 0.5rem; color: #999; display: block; text-align: right; margin-top: -2px; font-weight: 600; }
 
         .cp-item.highlight-wonomulyo {
             background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
             border: 1.5px solid var(--pgd-gold);
-            margin: 15px 10px 10px 10px;
+            margin: 12px 10px 8px 10px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(253, 185, 19, 0.2);
             position: relative;
         }
-        .cp-item.highlight-wonomulyo .cp-name { color: #b8860b; font-size: 0.8rem; }
-        .cp-item.highlight-wonomulyo .cp-score { color: var(--pgd-hijau); font-size: 1.0rem; letter-spacing: -0.5px; }
+        .cp-item.highlight-wonomulyo .cp-name { color: #b8860b; font-size: 0.78rem; }
+        .cp-item.highlight-wonomulyo .cp-score { color: var(--pgd-hijau); font-size: 0.95rem; letter-spacing: -0.5px; }
         
         .badge-premium {
             background: var(--pgd-gold);
             color: var(--pgd-hijau);
-            font-size: 0.5rem;
-            padding: 1px 6px;
+            font-size: 0.48rem;
+            padding: 1px 5px;
             border-radius: 4px;
             font-weight: 900;
             position: absolute;
@@ -46,7 +75,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .section-divider { font-size: 0.7rem; font-weight: 900; color: #999; text-transform: uppercase; letter-spacing: 2px; border-left: 4px solid var(--pgd-gold); padding-left: 10px; margin: 25px 0 15px 0; }
+        .section-divider { font-size: 0.65rem; font-weight: 900; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; border-left: 4px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 10px 0; }
         #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
         
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1030; }
@@ -58,21 +87,23 @@
 </head>
 <body>
 
-<div id="loading-overlay"><div class="spinner-border text-success" role="status"></div><span class="mt-2 fw-bold text-success">Menerapkan Warna Dinamis...</span></div>
+<div id="loading-overlay"><div class="spinner-border text-success" role="status"></div><span class="mt-2 fw-bold text-success">Mengatur Posisi Logo...</span></div>
 
-<div class="pegadaian-header text-center py-3">
-    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img mb-1">
-    <h1 class="m-0" style="font-size: 0.85rem; font-weight: 800;">DASHBOARD MONITORING KPI</h1>
+<div class="pegadaian-header">
+    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
+    <h1 class="header-title">DASHBOARD MONITORING KPI</h1>
 </div>
 
-<div class="container py-3">
+<div class="container py-2">
+    <div id="data-date" class="data-date">Sinkronisasi data...</div>
+
     <div class="card kpi-card">
         <div id="cp-list-container"></div>
     </div>
 
     <div class="section-divider">PERFORMA KPI UPC-CP WONOMULYO</div>
-    <div class="card kpi-card"><div class="card-header">UPC - TOTAL BULANAN</div><div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 250px;"></canvas></div></div>
-    <div class="card kpi-card"><div class="card-header">UPC - TOTAL TAHUNAN</div><div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 250px;"></canvas></div></div>
+    <div class="card kpi-card"><div class="card-header">UPC - TOTAL BULANAN</div><div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 230px;"></canvas></div></div>
+    <div class="card kpi-card"><div class="card-header">UPC - TOTAL TAHUNAN</div><div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 230px;"></canvas></div></div>
 </div>
 
 <nav class="bottom-nav">
@@ -86,12 +117,11 @@
     const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
     Chart.register(ChartDataLabels);
 
-    // Fungsi Pembantu Warna Dinamis
     function getDynamicColor(val) {
-        if (val <= 90) return '#dc3545';     // 🔴 Merah: <= 90
-        if (val <= 100) return '#ffc107';    // 🟡 Kuning: 90.10 - 100
-        if (val <= 105) return '#198754';    // 🟢 Hijau: 100.10 - 105
-        return '#0d6efd';                   // 🔵 Biru: > 105
+        if (val <= 90) return '#dc3545';
+        if (val <= 100) return '#ffc107';
+        if (val <= 105) return '#198754';
+        return '#0d6efd';
     }
 
     async function init() {
@@ -100,19 +130,19 @@
                 fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
                 fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
             ]);
-            renderCP(resB.items, resT.items);
             
-            // Proses Warna Bulanan
-            const dataUPCBulanan = processUPC(resB.items);
-            const colorsBulanan = dataUPCBulanan.v.map(getDynamicColor);
-            createChart('chartUPCBulanan', dataUPCBulanan, colorsBulanan);
+            document.getElementById('data-date').innerText = `Data per: ${resB.date || "-"} | ${resB.infoM2 || ""}`;
 
-            // Proses Warna Tahunan (Sama Dengan Bulanan)
-            const dataUPCTahunan = processUPC(resT.items);
-            const colorsTahunan = dataUPCTahunan.v.map(getDynamicColor);
-            createChart('chartUPCTahunan', dataUPCTahunan, colorsTahunan);
+            renderCP(resB.items, resT.items);
+            createChart('chartUPCBulanan', processUPC(resB.items), 'B');
+            createChart('chartUPCTahunan', processUPC(resT.items), 'T');
 
-        } catch (e) { console.error(e); } finally { document.getElementById('loading-overlay').style.display = 'none'; }
+        } catch (e) { 
+            console.error(e); 
+            document.getElementById('data-date').innerText = "Gagal memuat tanggal.";
+        } finally { 
+            document.getElementById('loading-overlay').style.display = 'none'; 
+        }
     }
 
     function renderCP(b, t) {
@@ -163,17 +193,18 @@
         return { l: s.map(x => x[0]), v: s.map(x => x[1]) };
     }
 
-    function createChart(id, d, c) {
+    function createChart(id, d, type) {
+        const colors = d.v.map(getDynamicColor);
         new Chart(document.getElementById(id), {
-            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: c, borderRadius: 6, barThickness: 22 }] },
+            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: colors, borderRadius: 6, barThickness: 20 }] },
             options: { 
                 indexAxis: 'y', responsive: true, maintainAspectRatio: false, events: [],
                 plugins: { 
                     legend: { display: false }, datalabels: { 
-                        anchor: 'end', align: 'left', color: '#fff', font: { weight: 'bold', size: 10 }, formatter: v => v.toFixed(2) 
+                        anchor: 'end', align: 'left', color: '#fff', font: { weight: 'bold', size: 9 }, formatter: v => v.toFixed(2) 
                     } 
                 }, 
-                scales: { x: { display: false, suggestedMax: 115 }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 }, color: '#003319' } } } 
+                scales: { x: { display: false, suggestedMax: 115 }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 9 }, color: '#003319' } } } 
             }
         });
     }
