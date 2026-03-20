@@ -9,101 +9,93 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
-        :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f4f7f6; }
-        body { background-color: var(--pgd-light); font-family: 'Segoe UI', sans-serif; padding-bottom: 95px; }
+        :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f8faf9; --pgd-white: #ffffff; }
+        body { background-color: var(--pgd-light); font-family: 'Segoe UI', sans-serif; padding-bottom: 110px; color: #333; }
         
-        /* FIX HEADER: Logo & Teks Rata Tengah Sempurna */
-        .pegadaian-header { 
-            background: linear-gradient(180deg, #004d29 0%, #002b16 100%); 
-            border-bottom: 4px solid var(--pgd-gold); 
-            color: white; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1020; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            /* Gunakan flex untuk centering */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 10px; /* Padding vertikal disesuaikan */
+        /* HEADER: CLEAN & CENTERED */
+        .header { 
+            background: var(--pgd-white); padding: 10px 10px; display: flex; flex-direction: column; 
+            align-items: center; border-bottom: 3px solid var(--pgd-gold); position: sticky; 
+            top: 0; z-index: 1020; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .logo-img { max-width: 110px; height: auto; display: block; }
-        .header-title { margin: 0; margin-top: 5px; font-size: 0.82rem; font-weight: 800; text-align: center; }
+        .logo-img { max-width: 95px; height: auto; margin-bottom: 2px; }
+        .header h1 { margin: 0; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; color: var(--pgd-hijau); }
         
-        .data-date { 
-            font-size: 0.62rem; 
-            color: #888; 
-            text-align: center; 
-            font-style: italic; 
-            margin: 0px 0 8px 0; 
-            font-weight: 600; 
-            line-height: 1;
-        }
+        /* DATA PER TANGGAL (COMPACT) */
+        .data-date { font-size: 0.6rem; color: #999; text-align: center; font-style: italic; margin: 8px 0 4px 0; font-weight: 600; line-height: 1; }
 
-        .container { padding-top: 10px !important; }
+        .container { padding: 0 15px !important; max-width: 500px; margin: 0 auto; }
 
-        .kpi-card { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); background: white; margin-bottom: 15px; overflow: hidden; }
-        .card-header { background: #fff; border-bottom: 1px solid #eee; font-weight: 800; color: var(--pgd-hijau); font-size: 0.72rem; text-transform: uppercase; padding: 8px 15px; }
+        /* CP LIST CONTAINER */
+        .kpi-card { border: none; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: white; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.02); }
+        .card-header { background: #fff; border-bottom: 1px solid #f5f5f5; font-weight: 800; color: var(--pgd-hijau); font-size: 0.7rem; text-transform: uppercase; padding: 8px 15px; }
         
-        .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border-bottom: 1px solid #f0f0f0; }
-        .cp-name { font-weight: 800; font-size: 0.72rem; color: var(--pgd-hijau); }
-        .cp-score { font-weight: 900; font-size: 0.82rem; color: #333; letter-spacing: -0.2px; }
-        .label-score { font-size: 0.5rem; color: #999; display: block; text-align: right; margin-top: -2px; font-weight: 600; }
+        /* CP ITEM: STANDARD */
+        .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-bottom: 1px solid #f8f8f8; }
+        .cp-name { font-weight: 800; font-size: 0.7rem; color: var(--pgd-hijau); }
+        .cp-score { font-weight: 900; font-size: 0.8rem; color: #333; letter-spacing: -0.2px; }
+        .label-score { font-size: 0.48rem; color: #aaa; display: block; text-align: right; margin-top: -2px; font-weight: 700; text-transform: uppercase; }
 
+        /* HIGHLIGHT CP WONOMULYO: PRESISI LAYAR */
         .cp-item.highlight-wonomulyo {
             background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
-            border: 1.5px solid var(--pgd-gold);
-            margin: 12px 10px 8px 10px;
+            border: 1.2px solid var(--pgd-gold); 
+            margin: 10px 0; /* Dipresisikan agar rata dengan tepi grafik */
+            padding: 10px 15px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(253, 185, 19, 0.2);
+            box-shadow: 0 4px 10px rgba(253, 185, 19, 0.15); 
             position: relative;
         }
-        .cp-item.highlight-wonomulyo .cp-name { color: #b8860b; font-size: 0.78rem; }
-        .cp-item.highlight-wonomulyo .cp-score { color: var(--pgd-hijau); font-size: 0.95rem; letter-spacing: -0.5px; }
+        .cp-item.highlight-wonomulyo .cp-name { color: #b8860b; font-size: 0.75rem; font-weight: 800; }
+        .cp-item.highlight-wonomulyo .cp-score { color: var(--pgd-hijau); font-size: 0.95rem; letter-spacing: -0.3px; }
         
         .badge-premium {
-            background: var(--pgd-gold);
-            color: var(--pgd-hijau);
-            font-size: 0.48rem;
-            padding: 1px 5px;
-            border-radius: 4px;
-            font-weight: 900;
-            position: absolute;
-            top: -8px;
-            left: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background: var(--pgd-gold); color: var(--pgd-hijau); font-size: 0.45rem; padding: 1px 6px;
+            border-radius: 4px; font-weight: 900; position: absolute; top: -8px; left: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .section-divider { font-size: 0.65rem; font-weight: 900; color: #aaa; text-transform: uppercase; letter-spacing: 1.5px; border-left: 4px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 10px 0; }
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
+        /* SECTION DIVIDER */
+        .section-divider { font-size: 0.62rem; font-weight: 900; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 8px 0; }
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: white; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #ddd; z-index: 1030; }
-        .nav-item { text-align: center; color: #999; text-decoration: none; flex: 1; font-size: 0.65rem; font-weight: 700; }
-        .nav-item.active { color: var(--pgd-hijau); }
-        .nav-item.active i { color: var(--pgd-gold); }
-        .nav-item i { font-size: 1.3rem; display: block; margin-bottom: 3px; }
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
+        
+        /* FLOATING NAV: PREMIUM ISLAND */
+        .bottom-nav { 
+            position: fixed; bottom: 15px; left: 15px; right: 15px; height: 55px; 
+            background: var(--pgd-hijau); display: flex; justify-content: space-around; 
+            align-items: center; border-radius: 18px; z-index: 1030; 
+            box-shadow: 0 10px 25px rgba(0, 51, 25, 0.3); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        .nav-item.active { color: var(--pgd-gold); }
+        .nav-item i { font-size: 1rem; margin-bottom: 2px; }
+        .nav-item span { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; }
     </style>
 </head>
 <body>
+<div id="loading-overlay"><div class="spinner-border text-success" style="width: 2rem; height: 2rem;"></div><span class="mt-2 fw-bold text-success" style="font-size: 0.7rem;">Syncing Data...</span></div>
 
-<div id="loading-overlay"><div class="spinner-border text-success" role="status"></div><span class="mt-2 fw-bold text-success">Loading data...</span></div>
-
-<div class="pegadaian-header">
+<div class="header">
     <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
-    <h1 class="header-title">DASHBOARD MONITORING KPI</h1>
+    <h1>DASHBOARD MONITORING KPI</h1>
 </div>
 
-<div class="container py-2">
-    <div id="data-date" class="data-date">Sinkronisasi data...</div>
-
+<div class="container">
+    <div id="data-date" class="data-date">Updating...</div>
+    
     <div class="card kpi-card">
         <div id="cp-list-container"></div>
     </div>
 
-    <div class="section-divider">PERFORMA KPI UPC-CP WONOMULYO</div>
-    <div class="card kpi-card"><div class="card-header">UPC - TOTAL BULANAN</div><div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 230px;"></canvas></div></div>
-    <div class="card kpi-card"><div class="card-header">UPC - TOTAL TAHUNAN</div><div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 230px;"></canvas></div></div>
+    <div class="section-divider">PERFORMA KPI UPC</div>
+    <div class="card kpi-card">
+        <div class="card-header">TOTAL BULANAN</div>
+        <div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 220px;"></canvas></div>
+    </div>
+    <div class="card kpi-card">
+        <div class="card-header">TOTAL TAHUNAN</div>
+        <div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 220px;"></canvas></div>
+    </div>
 </div>
 
 <nav class="bottom-nav">
@@ -130,81 +122,56 @@
                 fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
                 fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
             ]);
-            
             document.getElementById('data-date').innerText = `Data per: ${resB.date || "-"} | ${resB.infoM2 || ""}`;
-
             renderCP(resB.items, resT.items);
-            createChart('chartUPCBulanan', processUPC(resB.items), 'B');
-            createChart('chartUPCTahunan', processUPC(resT.items), 'T');
-
-        } catch (e) { 
-            console.error(e); 
-            document.getElementById('data-date').innerText = "Gagal memuat tanggal.";
-        } finally { 
-            document.getElementById('loading-overlay').style.display = 'none'; 
-        }
+            createChart('chartUPCBulanan', processUPC(resB.items));
+            createChart('chartUPCTahunan', processUPC(resT.items));
+        } catch (e) { console.error(e); } finally { document.getElementById('loading-overlay').style.display = 'none'; }
     }
 
     function renderCP(b, t) {
         const cpMap = {};
         b.filter(i => i.kategori.toUpperCase().includes("CP")).forEach(i => { 
-            const u = i.unit.toUpperCase();
-            if(!cpMap[u]) cpMap[u] = { b: 0, t: 0 };
-            cpMap[u].b += parseFloat(i.nilaiKpi) || 0;
+            const u = i.unit.toUpperCase(); if(!cpMap[u]) cpMap[u] = { b: 0, t: 0 }; cpMap[u].b += parseFloat(i.nilaiKpi) || 0;
         });
         t.filter(i => i.kategori.toUpperCase().includes("CP")).forEach(i => { 
-            const u = i.unit.toUpperCase();
-            if(cpMap[u]) cpMap[u].t += parseFloat(i.nilaiKpi) || 0;
+            const u = i.unit.toUpperCase(); if(cpMap[u]) cpMap[u].t += parseFloat(i.nilaiKpi) || 0;
         });
         
-        const cont = document.getElementById('cp-list-container');
+        const cont = document.getElementById('cp-list-container'); 
         cont.innerHTML = "";
-        const units = Object.keys(cpMap).sort();
-
-        units.forEach(u => {
-            const isWonomulyo = u.includes("WONOMULYO");
-            const scoreB = cpMap[u].b.toFixed(2);
-            const scoreT = cpMap[u].t.toFixed(2);
+        
+        Object.keys(cpMap).sort().forEach(u => {
+            const isWon = u.includes("WONOMULYO");
             const itemDiv = document.createElement('div');
-            itemDiv.className = `cp-item ${isWonomulyo ? 'highlight-wonomulyo' : ''}`;
-            
+            itemDiv.className = `cp-item ${isWon ? 'highlight-wonomulyo' : ''}`;
             itemDiv.innerHTML = `
-                ${isWonomulyo ? '<span class="badge-premium">KANTOR CABANG</span>' : ''}
-                <div class="cp-name">
-                    ${isWonomulyo ? '<i class="fas fa-crown me-1 text-warning"></i>' : '<i class="fas fa-store me-1 text-muted"></i>'} 
-                    ${u}
-                </div>
+                ${isWon ? '<span class="badge-premium">KANTOR CABANG</span>' : ''}
+                <div class="cp-name">${isWon ? '<i class="fas fa-crown text-warning me-1"></i>' : '<i class="fas fa-store text-muted me-1"></i>'} ${u}</div>
                 <div>
-                    <div class="cp-score">${scoreB} / ${scoreT}</div>
+                    <div class="cp-score">${cpMap[u].b.toFixed(2)} / ${cpMap[u].t.toFixed(2)}</div>
                     <span class="label-score">SKOR B / T</span>
-                </div>
-            `;
+                </div>`;
             cont.appendChild(itemDiv);
         });
     }
 
     function processUPC(items) {
-        const m = {};
-        items.filter(i => i.kategori.toUpperCase().includes("UPC")).forEach(i => { 
-            const u = i.unit.toUpperCase(); 
-            m[u] = (m[u] || 0) + (parseFloat(i.nilaiKpi) || 0); 
+        const m = {}; items.filter(i => i.kategori.toUpperCase().includes("UPC")).forEach(i => { 
+            const u = i.unit.toUpperCase(); m[u] = (m[u] || 0) + (parseFloat(i.nilaiKpi) || 0); 
         });
         const s = Object.entries(m).sort((a,b) => b[1]-a[1]);
         return { l: s.map(x => x[0]), v: s.map(x => x[1]) };
     }
 
-    function createChart(id, d, type) {
+    function createChart(id, d) {
         const colors = d.v.map(getDynamicColor);
         new Chart(document.getElementById(id), {
-            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: colors, borderRadius: 6, barThickness: 20 }] },
+            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: colors, borderRadius: 5, barThickness: 18 }] },
             options: { 
                 indexAxis: 'y', responsive: true, maintainAspectRatio: false, events: [],
-                plugins: { 
-                    legend: { display: false }, datalabels: { 
-                        anchor: 'end', align: 'left', color: '#fff', font: { weight: 'bold', size: 9 }, formatter: v => v.toFixed(2) 
-                    } 
-                }, 
-                scales: { x: { display: false, suggestedMax: 115 }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 9 }, color: '#003319' } } } 
+                plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'left', color: '#fff', font: { weight: 'bold', size: 9 }, formatter: v => v.toFixed(2) } }, 
+                scales: { x: { display: false, suggestedMax: 115 }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 8.5 }, color: '#003319' } } } 
             }
         });
     }
