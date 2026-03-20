@@ -3,139 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPI Tahunan - Pegadaian</title>
+    <title>KPI Bulanan - Pegadaian</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { 
-            --pgd-hijau: #003319; 
-            --pgd-gold: #FDB913; 
-            --pgd-light: #f8faf9; 
-            --pgd-white: #ffffff;
-            --pgd-red: #dc3545;
-            --shadow-premium: 0 10px 30px rgba(0, 51, 25, 0.08);
+            --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f8faf9; 
+            --pgd-white: #ffffff; --pgd-red: #dc3545;
         }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            background: var(--pgd-light); 
-            margin: 0; 
-            padding-bottom: 110px; 
-            color: #333;
-        }
-
-        /* HEADER: Clean & Centered */
+        body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; padding-bottom: 110px; color: #333; }
+        
+        /* HEADER SERAGAM */
         .header { 
-            background: var(--pgd-white); 
-            padding: 10px 10px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            border-bottom: 3px solid var(--pgd-gold); 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
+            background: var(--pgd-white); padding: 10px 10px; display: flex; flex-direction: column; 
+            align-items: center; border-bottom: 3px solid var(--pgd-gold); position: sticky; 
+            top: 0; z-index: 1000; 
         }
         .logo-img { max-width: 90px; height: auto; margin-bottom: 2px; }
-        .header h1 { 
-            margin: 0; 
-            font-size: 0.7rem; 
-            letter-spacing: 2px; 
-            text-transform: uppercase; 
-            font-weight: 800; 
-            color: var(--pgd-hijau); 
-        }
+        .header h1 { margin: 0; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; color: var(--pgd-hijau); }
 
         /* PREMIUM COMPACT SCORE BAR */
         .premium-score-bar {
             background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
-            border: 1.2px solid var(--pgd-gold);
-            margin: 6px 15px;
-            padding: 5px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(253, 185, 19, 0.1);
-            position: sticky;
-            top: 55px;
-            z-index: 998;
+            border: 1.2px solid var(--pgd-gold); margin: 6px 15px; padding: 5px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-radius: 10px; box-shadow: 0 4px 10px rgba(253, 185, 19, 0.1);
+            position: sticky; top: 55px; z-index: 998;
         }
         .score-info { display: flex; align-items: center; gap: 6px; }
         .score-info span { font-size: 0.55rem; font-weight: 800; color: #b8860b; text-transform: uppercase; }
         .score-info strong { font-size: 1.1rem; font-weight: 900; color: var(--pgd-hijau); letter-spacing: -0.5px; }
         .date-info div { font-size: 0.5rem; color: #aaa; font-style: italic; font-weight: 600; }
 
-        /* FILTER SECTION */
-        .filter-section { 
-            background: rgba(248, 250, 249, 0.9); 
-            backdrop-filter: blur(10px);
-            padding: 5px 15px; 
-            display: flex; 
-            gap: 5px; 
-        }
-        select { 
-            flex: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid #e0e0e0; 
-            font-size: 0.65rem; color: var(--pgd-hijau); font-weight: 700; outline: none; background: var(--pgd-white);
-        }
+        .filter-section { background: rgba(248, 250, 249, 0.9); backdrop-filter: blur(10px); padding: 5px 15px; display: flex; gap: 5px; }
+        select { flex: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid #e0e0e0; font-size: 0.65rem; color: var(--pgd-hijau); font-weight: 700; outline: none; background: var(--pgd-white); }
 
         .container { padding: 2px 15px; max-width: 500px; margin: 0 auto; }
 
-        /* KPI CARD: Slim Body */
-        .kpi-card { 
-            background: var(--pgd-white); border-radius: 14px; margin-bottom: 8px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden; border: 1px solid rgba(0,0,0,0.02); 
-        }
-        .kpi-header { 
-            background: #fff; padding: 8px 12px; font-weight: 800; color: var(--pgd-hijau); 
-            font-size: 0.7rem; border-bottom: 1px solid #f8f8f8; display: flex; align-items: center; gap: 6px;
-        }
+        /* KPI CARD SLIM */
+        .kpi-card { background: var(--pgd-white); border-radius: 14px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden; border: 1px solid rgba(0,0,0,0.02); }
+        .kpi-header { background: #fff; padding: 8px 12px; font-weight: 800; color: var(--pgd-hijau); font-size: 0.7rem; border-bottom: 1px solid #f8f8f8; display: flex; align-items: center; gap: 6px; }
         .kpi-header i { color: var(--pgd-gold); font-size: 0.7rem; }
-
         .card-body { padding: 8px 12px; }
         .data-row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 0.72rem; }
         .data-row span:first-child { color: #888; font-weight: 600; }
         .data-row span:last-child { font-weight: 800; color: #222; }
 
-        /* MODIFIKASI: INPUT & SAVE LEBIH KECIL */
-        .input-group { 
-            margin-top: 6px; 
-            display: flex; 
-            gap: 4px; 
-            padding-top: 6px; 
-            border-top: 1px solid #fcfcfc; 
-        }
-        input { 
-            flex: 1; 
-            height: 28px; /* Tinggi dikunci */
-            padding: 0 8px; 
-            border: 1px solid #eee; 
-            border-radius: 6px; 
-            font-size: 0.75rem; 
-            text-align: center; 
-            font-weight: 700; 
-            background: #fafafa;
-            outline: none;
-        }
-        .btn-save { 
-            background: var(--pgd-hijau); 
-            color: var(--pgd-gold); 
-            border: none; 
-            width: 60px; /* Lebar dikunci */
-            height: 28px; /* Tinggi dikunci agar sejajar input */
-            border-radius: 6px; 
-            font-weight: 800; 
-            font-size: 0.6rem; 
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-        .btn-save:active { opacity: 0.7; transform: scale(0.98); }
-
+        /* MICRO INPUT AREA */
+        .input-group { margin-top: 6px; display: flex; gap: 4px; padding-top: 6px; border-top: 1px solid #fcfcfc; }
+        input { flex: 1; height: 28px; padding: 0 8px; border: 1px solid #eee; border-radius: 6px; font-size: 0.75rem; text-align: center; font-weight: 700; background: #fafafa; outline: none; }
+        .btn-save { background: var(--pgd-hijau); color: var(--pgd-gold); border: none; width: 60px; height: 28px; border-radius: 6px; font-weight: 800; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
+        
         .kpi-footer { padding: 6px 12px; background: #fff; }
         .progress-label { display: flex; justify-content: space-between; font-size: 0.55rem; font-weight: 800; margin-bottom: 2px; color: #aaa; }
         .progress-bg { background: #f5f5f5; height: 4px; border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); }
 
-        /* FLOATING NAV */
+        /* FLOATING NAV SERAGAM */
         .bottom-nav { 
             position: fixed; bottom: 15px; left: 15px; right: 15px; height: 55px; 
             background: var(--pgd-hijau); display: flex; justify-content: space-around; 
@@ -147,29 +70,20 @@
         .nav-item i { font-size: 1rem; margin-bottom: 2px; }
         .nav-item span { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; }
 
-        #toast { 
-            visibility: hidden; background: var(--pgd-hijau); color: var(--pgd-gold); 
-            padding: 8px 15px; border-radius: 8px; position: fixed; bottom: 85px; left: 50%; 
-            transform: translateX(-50%); font-weight: 800; font-size: 0.7rem; z-index: 2000;
-        }
+        #toast { visibility: hidden; background: var(--pgd-hijau); color: var(--pgd-gold); padding: 8px 15px; border-radius: 8px; position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 0.7rem; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         #toast.show { visibility: visible; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" alt="Logo" class="logo-img">
-    <h1>KPI TAHUNAN</h1>
+    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
+    <h1>KPI BULANAN</h1>
 </div>
 
 <div class="premium-score-bar" id="summary-area" style="display:none;">
-    <div class="score-info">
-        <span>Total KPI</span>
-        <strong id="total-kpi-val">0</strong>
-    </div>
-    <div class="date-info">
-        <div id="data-date"></div>
-    </div>
+    <div class="score-info"><span>Total KPI</span><strong id="total-kpi-val">0</strong></div>
+    <div class="date-info"><div id="data-date"></div></div>
 </div>
 
 <div class="filter-section">
@@ -186,11 +100,11 @@
     <a href="laporan.html" class="nav-item"><i class="fas fa-exclamation-circle"></i><span>Shortfall</span></a>
 </nav>
 
-<div id="toast">✅ Sukses!</div>
+<div id="toast">✅ Update Berhasil!</div>
 
 <script>
     const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec"; 
-    const NAMA_SHEET = "DATA_UI BULANAN";
+    const NAMA_SHEET = "DATA_UI BULANAN"; // Diarahkan ke data Bulanan
     let rawData = [];
 
     async function init() {
@@ -238,7 +152,7 @@
                     </div>
                 </div>
                 <div class="kpi-footer">
-                    <div class="progress-label"><span>ACH: ${ach.toFixed(2)}%</span></div>
+                    <div class="progress-label"><span>ACHIEVEMENT: ${ach.toFixed(2)}%</span></div>
                     <div class="progress-bg"><div class="progress-fill" style="width:${Math.min(ach, 100)}%"></div></div>
                 </div>`;
             container.appendChild(card);
@@ -247,13 +161,12 @@
 
     async function updateData(btn, idx) {
         const val = parseFloat(document.getElementById(`in-${idx}`).value);
-        if(!val) return; 
-        const oldText = btn.innerText; btn.innerText = "...";
+        if(!val) return; btn.innerText = "...";
         try {
             await fetch(API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ rowIdx: idx, value: val, sheet: NAMA_SHEET }) });
             document.getElementById("toast").className = "show";
             setTimeout(() => { document.getElementById("toast").className = ""; init(); }, 2000);
-        } catch (e) { btn.innerText = oldText; }
+        } catch (e) { btn.innerText = "SAVE"; }
     }
     window.onload = init;
 </script>
