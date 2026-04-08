@@ -1,181 +1,171 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring KPI - Grafik Utama</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KPI Monitoring - Grafik</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    <style>
-        :root { --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f8faf9; --pgd-white: #ffffff; }
-        body { background-color: var(--pgd-light); font-family: 'Segoe UI', sans-serif; padding-bottom: 110px; color: #333; }
-        
-        /* HEADER: CLEAN & CENTERED */
-        .header { 
-            background: var(--pgd-white); padding: 10px 10px; display: flex; flex-direction: column; 
-            align-items: center; border-bottom: 3px solid var(--pgd-gold); position: sticky; 
-            top: 0; z-index: 1020; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .logo-img { max-width: 95px; height: auto; margin-bottom: 2px; }
-        .header h1 { margin: 0; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; color: var(--pgd-hijau); }
-        
-        /* DATA PER TANGGAL (COMPACT) */
-        .data-date { font-size: 0.6rem; color: #999; text-align: center; font-style: italic; margin: 8px 0 4px 0; font-weight: 600; line-height: 1; }
-
-        .container { padding: 0 15px !important; max-width: 500px; margin: 0 auto; }
-
-        /* CP LIST CONTAINER */
-        .kpi-card { border: none; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); background: white; margin-bottom: 12px; overflow: hidden; border: 1px solid rgba(0,0,0,0.02); }
-        .card-header { background: #fff; border-bottom: 1px solid #f5f5f5; font-weight: 800; color: var(--pgd-hijau); font-size: 0.7rem; text-transform: uppercase; padding: 8px 15px; }
-        
-        /* CP ITEM: STANDARD */
-        .cp-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; border-bottom: 1px solid #f8f8f8; }
-        .cp-name { font-weight: 800; font-size: 0.7rem; color: var(--pgd-hijau); }
-        .cp-score { font-weight: 900; font-size: 0.8rem; color: #333; letter-spacing: -0.2px; }
-        .label-score { font-size: 0.48rem; color: #aaa; display: block; text-align: right; margin-top: -2px; font-weight: 700; text-transform: uppercase; }
-
-        /* HIGHLIGHT CP WONOMULYO: PRESISI LAYAR */
-        .cp-item.highlight-wonomulyo {
-            background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
-            border: 1.2px solid var(--pgd-gold); 
-            margin: 10px 0; /* Dipresisikan agar rata dengan tepi grafik */
-            padding: 10px 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(253, 185, 19, 0.15); 
-            position: relative;
-        }
-        .cp-item.highlight-wonomulyo .cp-name { color: #b8860b; font-size: 0.75rem; font-weight: 800; }
-        .cp-item.highlight-wonomulyo .cp-score { color: var(--pgd-hijau); font-size: 0.95rem; letter-spacing: -0.3px; }
-        
-        .badge-premium {
-            background: var(--pgd-gold); color: var(--pgd-hijau); font-size: 0.45rem; padding: 1px 6px;
-            border-radius: 4px; font-weight: 900; position: absolute; top: -8px; left: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* SECTION DIVIDER */
-        .section-divider { font-size: 0.62rem; font-weight: 900; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 8px 0; }
-        
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
-        
-        /* FLOATING NAV: PREMIUM ISLAND */
-        .bottom-nav { 
-            position: fixed; bottom: 15px; left: 15px; right: 15px; height: 55px; 
-            background: var(--pgd-hijau); display: flex; justify-content: space-around; 
-            align-items: center; border-radius: 18px; z-index: 1030; 
-            box-shadow: 0 10px 25px rgba(0, 51, 25, 0.3); border: 1px solid rgba(255,255,255,0.1);
-        }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
-        .nav-item.active { color: var(--pgd-gold); }
-        .nav-item i { font-size: 1rem; margin-bottom: 2px; }
-        .nav-item span { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; }
-    </style>
 </head>
-<body>
-<div id="loading-overlay"><div class="spinner-border text-success" style="width: 2rem; height: 2rem;"></div><span class="mt-2 fw-bold text-success" style="font-size: 0.7rem;">Syncing Data...</span></div>
 
-<div class="header">
-    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
-    <h1>DASHBOARD MONITORING KPI</h1>
-</div>
-
-<div class="container">
-    <div id="data-date" class="data-date">Updating...</div>
-    
-    <div class="card kpi-card">
-        <div id="cp-list-container"></div>
+<body style="touch-action: manipulation;">
+    <div id="loader">
+        <div class="loader-card">
+            <div class="spinner"></div>
+            <span
+                style="font-size: 0.65rem; font-weight: 800; color: var(--pgd-hijau); margin-top: 12px; letter-spacing: 1px;">MEMPROSES
+                DATA...</span>
+        </div>
     </div>
 
-    <div class="section-divider">PERFORMA KPI UPC</div>
-    <div class="card kpi-card">
-        <div class="card-header">TOTAL BULANAN</div>
-        <div class="card-body p-2"><canvas id="chartUPCBulanan" style="max-height: 220px;"></canvas></div>
+    <div class="header">
+        <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png"
+            class="logo-img">
+        <h1>DASHBOARD MONITORING KPI</h1>
     </div>
-    <div class="card kpi-card">
-        <div class="card-header">TOTAL TAHUNAN</div>
-        <div class="card-body p-2"><canvas id="chartUPCTahunan" style="max-height: 220px;"></canvas></div>
+
+    <div class="container">
+        <div id="data-date"
+            style="font-size: 0.6rem; text-align: center; margin: 10px 0; color: #eef2f5; font-style: italic;">Memuat
+            data...</div>
+        <div class="kpi-card">
+            <div id="cp-list-container"></div>
+        </div>
+        <div
+            style="font-size: 0.65rem; font-weight: 900; color: #f8f7f7; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 10px 0;">
+            RANKING PERFORMA UPC</div>
+        <div class="kpi-card">
+            <div class="kpi-header">TOTAL SKOR BULANAN</div>
+            <div class="card-body" style="padding:10px;"><canvas id="chartUPCBulanan"
+                    style="max-height: 250px;"></canvas></div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-header">TOTAL SKOR TAHUNAN</div>
+            <div class="card-body" style="padding:10px;"><canvas id="chartUPCTahunan"
+                    style="max-height: 250px;"></canvas></div>
+        </div>
     </div>
-</div>
 
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Grafik</span></a>
-    <a href="kpi.html" class="nav-item"><i class="fas fa-calendar-check"></i><span>Tahunan</span></a>
-    <a href="bulanan.html" class="nav-item"><i class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
-    <a href="laporan.html" class="nav-item"><i class="fas fa-exclamation-circle"></i><span>Shortfall</span></a>
-</nav>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active" id="nav-grafik">
+            <i class="fas fa-chart-pie"></i><span>Grafik</span>
+        </a>
+        <a href="kpi.html" class="nav-item" id="nav-tahunan">
+            <i class="fas fa-calendar-check"></i><span>Tahunan</span>
+        </a>
+        <a href="bulanan.html" class="nav-item" id="nav-bulanan">
+            <i class="fas fa-calendar-alt"></i><span>Bulanan</span>
+        </a>
+        <a href="harian.html" class="nav-item" id="nav-harian">
+            <i class="fas fa-edit"></i><span>Harian</span>
+        </a>
+    </nav>
 
-<script>
-    const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
-    Chart.register(ChartDataLabels);
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
+        Chart.register(ChartDataLabels);
 
-    function getDynamicColor(val) {
-        if (val <= 90) return '#dc3545';
-        if (val <= 100) return '#ffc107';
-        if (val <= 105) return '#198754';
-        return '#0d6efd';
-    }
+        function hideLoader() {
+            const ld = document.getElementById('loader');
+            ld.style.opacity = '0';
+            setTimeout(() => { ld.style.display = 'none'; }, 400);
+        }
 
-    async function init() {
-        try {
-            const [resB, resT] = await Promise.all([
-                fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
-                fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
-            ]);
-            document.getElementById('data-date').innerText = `Data per: ${resB.date || "-"} | ${resB.infoM2 || ""}`;
-            renderCP(resB.items, resT.items);
-            createChart('chartUPCBulanan', processUPC(resB.items));
-            createChart('chartUPCTahunan', processUPC(resT.items));
-        } catch (e) { console.error(e); } finally { document.getElementById('loading-overlay').style.display = 'none'; }
-    }
+        async function init() {
+            try {
+                const [resB, resT] = await Promise.all([
+                    fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
+                    fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
+                ]);
+                document.getElementById('data-date').innerText = `Update: ${resB.date || "-"}`;
+                renderCP(resB.items, resT.items);
+                createChart('chartUPCBulanan', processUPC(resB.items));
+                createChart('chartUPCTahunan', processUPC(resT.items));
+            } catch (e) { console.error(e); } finally { hideLoader(); }
+        }
 
-    function renderCP(b, t) {
-        const cpMap = {};
-        b.filter(i => i.kategori.toUpperCase().includes("CP")).forEach(i => { 
-            const u = i.unit.toUpperCase(); if(!cpMap[u]) cpMap[u] = { b: 0, t: 0 }; cpMap[u].b += parseFloat(i.nilaiKpi) || 0;
-        });
-        t.filter(i => i.kategori.toUpperCase().includes("CP")).forEach(i => { 
-            const u = i.unit.toUpperCase(); if(cpMap[u]) cpMap[u].t += parseFloat(i.nilaiKpi) || 0;
-        });
-        
-        const cont = document.getElementById('cp-list-container'); 
-        cont.innerHTML = "";
-        
-        Object.keys(cpMap).sort().forEach(u => {
-            const isWon = u.includes("WONOMULYO");
-            const itemDiv = document.createElement('div');
-            itemDiv.className = `cp-item ${isWon ? 'highlight-wonomulyo' : ''}`;
-            itemDiv.innerHTML = `
-                ${isWon ? '<span class="badge-premium">KANTOR CABANG</span>' : ''}
-                <div class="cp-name">${isWon ? '<i class="fas fa-crown text-warning me-1"></i>' : '<i class="fas fa-store text-muted me-1"></i>'} ${u}</div>
-                <div>
-                    <div class="cp-score">${cpMap[u].b.toFixed(2)} / ${cpMap[u].t.toFixed(2)}</div>
-                    <span class="label-score">SKOR B / T</span>
+        function renderCP(b, t) {
+            const cpMap = {};
+            b.filter(i => i.kategori.includes("CP")).forEach(i => { const u = i.unit.toUpperCase(); if (!cpMap[u]) cpMap[u] = { b: 0, t: 0 }; cpMap[u].b += parseFloat(i.nilaiKpi) || 0; });
+            t.filter(i => i.kategori.includes("CP")).forEach(i => { const u = i.unit.toUpperCase(); if (cpMap[u]) cpMap[u].t += parseFloat(i.nilaiKpi) || 0; });
+
+            // SORTING BERDASARKAN SKOR TERTINGGI
+            const sortedCP = Object.keys(cpMap).sort((a, b) => cpMap[b].b - cpMap[a].b);
+
+            const cont = document.getElementById('cp-list-container'); cont.innerHTML = "";
+            sortedCP.forEach((u, idx) => {
+                const isWon = u.includes("WONOMULYO");
+                // MEDALI TOP 3 CABANG
+                let medal = idx === 0 ? "🥇 " : idx === 1 ? "🥈 " : idx === 2 ? "🥉 " : "🏪 ";
+
+                cont.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px 15px; border-bottom:1px solid #f0f0f0; ${isWon ? 'background:linear-gradient(90deg, #fffcf0 0%, #fff 100%); border:1.5px solid #FDB913; border-radius:15px; margin:10px; position:relative;' : ''}">
+                    ${isWon ? '<span style="position:absolute; top:-8px; left:12px; background:#FDB913; font-size:0.45rem; font-weight:900; padding:1px 6px; border-radius:4px;">CABANG</span>' : ''}
+                    <div style="font-weight:800; font-size:0.85rem;">${medal}${u}</div>
+                    <div style="text-align:right;"><div style="font-weight:900; font-size:1.0rem;">${cpMap[u].b.toFixed(2)} / ${cpMap[u].t.toFixed(2)}</div><span style="font-size:0.45rem; color:#888;">B / T</span></div>
                 </div>`;
-            cont.appendChild(itemDiv);
-        });
-    }
+            });
+        }
 
-    function processUPC(items) {
-        const m = {}; items.filter(i => i.kategori.toUpperCase().includes("UPC")).forEach(i => { 
-            const u = i.unit.toUpperCase(); m[u] = (m[u] || 0) + (parseFloat(i.nilaiKpi) || 0); 
-        });
-        const s = Object.entries(m).sort((a,b) => b[1]-a[1]);
-        return { l: s.map(x => x[0]), v: s.map(x => x[1]) };
-    }
+        function processUPC(items) {
+            const m = {}; items.filter(i => i.kategori.includes("UPC")).forEach(i => { const u = i.unit.toUpperCase(); m[u] = (m[u] || 0) + (parseFloat(i.nilaiKpi) || 0); });
 
-    function createChart(id, d) {
-        const colors = d.v.map(getDynamicColor);
-        new Chart(document.getElementById(id), {
-            type: 'bar', data: { labels: d.l, datasets: [{ data: d.v, backgroundColor: colors, borderRadius: 5, barThickness: 18 }] },
-            options: { 
-                indexAxis: 'y', responsive: true, maintainAspectRatio: false, events: [],
-                plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'left', color: '#fff', font: { weight: 'bold', size: 9 }, formatter: v => v.toFixed(2) } }, 
-                scales: { x: { display: false, suggestedMax: 115 }, y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 8.5 }, color: '#003319' } } } 
-            }
-        });
-    }
-    window.onload = init;
-</script>
+            // SORTING TERTINGGI KE TERENDAH
+            const sorted = Object.entries(m).sort((a, b) => b[1] - a[1]);
+
+            // TAMBAHKAN MEDALI KE LABEL DIAGRAM
+            const labels = sorted.map((x, idx) => {
+                if (idx === 0) return "🥇 " + x[0];
+                if (idx === 1) return "🥈 " + x[0];
+                if (idx === 2) return "🥉 " + x[0];
+                return x[0];
+            });
+
+            return { l: labels, v: sorted.map(x => x[1]) };
+        }
+
+        function createChart(id, d) {
+            new Chart(document.getElementById(id), {
+                type: 'bar',
+                data: {
+                    labels: d.l,
+                    datasets: [{
+                        data: d.v,
+                        backgroundColor: d.v.map(v => v <= 90 ? '#dc3545' : v <= 100 ? '#ffc107' : '#198754'),
+                        borderRadius: 6,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    events: [], // MATIKAN INTERAKSI SENTUH
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }, // MATIKAN DETAIL POPUP
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'left',
+                            color: '#fff',
+                            font: { weight: 'bold', size: 9 },
+                            formatter: v => v.toFixed(2)
+                        }
+                    },
+                    scales: {
+                        x: { display: false, suggestedMax: 115 },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { weight: 'bold', size: 8.5 }, color: '#003319' }
+                        }
+                    }
+                }
+            });
+        }
+        window.onload = init;
+    </script>
 </body>
+
 </html>
