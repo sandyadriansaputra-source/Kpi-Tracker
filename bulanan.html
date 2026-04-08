@@ -1,174 +1,259 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPI Bulanan - Pegadaian</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KPI Monitoring - Input</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root { 
-            --pgd-hijau: #003319; --pgd-gold: #FDB913; --pgd-light: #f8faf9; 
-            --pgd-white: #ffffff; --pgd-red: #dc3545;
-        }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--pgd-light); margin: 0; padding-bottom: 110px; color: #333; }
-        
-        /* HEADER SERAGAM */
-        .header { 
-            background: var(--pgd-white); padding: 10px 10px; display: flex; flex-direction: column; 
-            align-items: center; border-bottom: 3px solid var(--pgd-gold); position: sticky; 
-            top: 0; z-index: 1000; 
-        }
-        .logo-img { max-width: 90px; height: auto; margin-bottom: 2px; }
-        .header h1 { margin: 0; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; color: var(--pgd-hijau); }
-
-        /* PREMIUM COMPACT SCORE BAR */
-        .premium-score-bar {
-            background: linear-gradient(90deg, #fffcf0 0%, #fff 100%);
-            border: 1.2px solid var(--pgd-gold); margin: 6px 15px; padding: 5px 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-radius: 10px; box-shadow: 0 4px 10px rgba(253, 185, 19, 0.1);
-            position: sticky; top: 55px; z-index: 998;
-        }
-        .score-info { display: flex; align-items: center; gap: 6px; }
-        .score-info span { font-size: 0.55rem; font-weight: 800; color: #b8860b; text-transform: uppercase; }
-        .score-info strong { font-size: 1.1rem; font-weight: 900; color: var(--pgd-hijau); letter-spacing: -0.5px; }
-        .date-info div { font-size: 0.5rem; color: #aaa; font-style: italic; font-weight: 600; }
-
-        .filter-section { background: rgba(248, 250, 249, 0.9); backdrop-filter: blur(10px); padding: 5px 15px; display: flex; gap: 5px; }
-        select { flex: 1; padding: 6px 10px; border-radius: 8px; border: 1px solid #e0e0e0; font-size: 0.65rem; color: var(--pgd-hijau); font-weight: 700; outline: none; background: var(--pgd-white); }
-
-        .container { padding: 2px 15px; max-width: 500px; margin: 0 auto; }
-
-        /* KPI CARD SLIM */
-        .kpi-card { background: var(--pgd-white); border-radius: 14px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden; border: 1px solid rgba(0,0,0,0.02); }
-        .kpi-header { background: #fff; padding: 8px 12px; font-weight: 800; color: var(--pgd-hijau); font-size: 0.7rem; border-bottom: 1px solid #f8f8f8; display: flex; align-items: center; gap: 6px; }
-        .kpi-header i { color: var(--pgd-gold); font-size: 0.7rem; }
-        .card-body { padding: 8px 12px; }
-        .data-row { display: flex; justify-content: space-between; padding: 2px 0; font-size: 0.72rem; }
-        .data-row span:first-child { color: #888; font-weight: 600; }
-        .data-row span:last-child { font-weight: 800; color: #222; }
-
-        /* MICRO INPUT AREA */
-        .input-group { margin-top: 6px; display: flex; gap: 4px; padding-top: 6px; border-top: 1px solid #fcfcfc; }
-        input { flex: 1; height: 28px; padding: 0 8px; border: 1px solid #eee; border-radius: 6px; font-size: 0.75rem; text-align: center; font-weight: 700; background: #fafafa; outline: none; }
-        .btn-save { background: var(--pgd-hijau); color: var(--pgd-gold); border: none; width: 60px; height: 28px; border-radius: 6px; font-weight: 800; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; }
-        
-        .kpi-footer { padding: 6px 12px; background: #fff; }
-        .progress-label { display: flex; justify-content: space-between; font-size: 0.55rem; font-weight: 800; margin-bottom: 2px; color: #aaa; }
-        .progress-bg { background: #f5f5f5; height: 4px; border-radius: 10px; overflow: hidden; }
-        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pgd-gold), #28a745); }
-
-        /* FLOATING NAV SERAGAM */
-        .bottom-nav { 
-            position: fixed; bottom: 15px; left: 15px; right: 15px; height: 55px; 
-            background: var(--pgd-hijau); display: flex; justify-content: space-around; 
-            align-items: center; border-radius: 18px; z-index: 1030; 
-            box-shadow: 0 10px 25px rgba(0, 51, 25, 0.3); border: 1px solid rgba(255,255,255,0.1);
-        }
-        .nav-item { text-align: center; color: rgba(255,255,255,0.4); text-decoration: none; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .nav-item.active { color: var(--pgd-gold); }
-        .nav-item i { font-size: 1rem; margin-bottom: 2px; }
-        .nav-item span { font-size: 0.5rem; font-weight: 700; text-transform: uppercase; }
-
-        #toast { visibility: hidden; background: var(--pgd-hijau); color: var(--pgd-gold); padding: 8px 15px; border-radius: 8px; position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 0.7rem; z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        #toast.show { visibility: visible; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<div class="header">
-    <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png" class="logo-img">
-    <h1>KPI BULANAN</h1>
-</div>
+<body style="touch-action: manipulation;">
+    <div id="loader">
+        <div class="loader-card">
+            <div class="spinner"></div>
+            <span
+                style="font-size: 0.65rem; font-weight: 800; color: var(--pgd-hijau); margin-top: 12px; letter-spacing: 1px;">MEMPROSES
+                DATA...</span>
+        </div>
+    </div>
 
-<div class="premium-score-bar" id="summary-area" style="display:none;">
-    <div class="score-info"><span>Total KPI</span><strong id="total-kpi-val">0</strong></div>
-    <div class="date-info"><div id="data-date"></div></div>
-</div>
+    <div class="header">
+        <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png"
+            class="logo-img">
+        <h1 id="page-title">KPI MONITORING</h1>
+    </div>
 
-<div class="filter-section">
-    <select id="sel-kat" onchange="filterData()"><option value="all">KAT: SEMUA</option><option value="CP">CP</option><option value="UPC">UPC</option></select>
-    <select id="sel-unit" onchange="filterData()"><option value="all">UNIT: SEMUA</option><option value="WONOMULYO">WONOMULYO</option><option value="LUYO">LUYO</option><option value="SIDODADI">SIDODADI</option><option value="CAMPALAGIAN">CAMPALAGIAN</option><option value="PAMBUSUANG">PAMBUSUANG</option></select>
-</div>
+    <div class="premium-score-bar" id="summary-area" style="display:none;">
+        <div class="score-info"><span>Total Skor KPI</span><strong id="total-kpi-val">0.00</strong></div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div id="data-date" style="font-size:0.5rem; color:#aaa; font-weight:700; text-align:right;">-</div>
+            <div class="btn-hard-reset" onclick="hardReset()"><i class="fas fa-trash-alt"></i></div>
+        </div>
+    </div>
 
-<div class="container" id="display-area"></div>
+    <div class="filter-section" style="padding:10px 15px; display:flex; gap:8px; max-width:500px; margin:0 auto;">
+        <select id="sel-kat" onchange="filterData()">
+            <option value="all">KAT: SEMUA</option>
+            <option value="CP">CP</option>
+            <option value="UPC">UPC</option>
+        </select>
+        <select id="sel-unit" onchange="filterData()">
+            <option value="all">UNIT: SEMUA</option>
+            <option value="WONOMULYO">WONOMULYO</option>
+            <option value="LUYO">LUYO</option>
+            <option value="SIDODADI">SIDODADI</option>
+            <option value="CAMPALAGIAN">CAMPALAGIAN</option>
+            <option value="PAMBUSUANG">PAMBUSUANG</option>
+        </select>
+    </div>
 
-<nav class="bottom-nav">
-    <a href="index.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Grafik</span></a>
-    <a href="kpi.html" class="nav-item"><i class="fas fa-calendar-check"></i><span>Tahunan</span></a>
-    <a href="bulanan.html" class="nav-item active"><i class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
-    <a href="laporan.html" class="nav-item"><i class="fas fa-exclamation-circle"></i><span>Shortfall</span></a>
-</nav>
+    <div class="container" id="display-area"></div>
 
-<div id="toast">✅ Update Berhasil!</div>
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item" id="nav-grafik">
+            <i class="fas fa-chart-pie"></i><span>Grafik</span>
+        </a>
+        <a href="kpi.html" class="nav-item" id="nav-tahunan">
+            <i class="fas fa-calendar-check"></i><span>Tahunan</span>
+        </a>
+        <a href="bulanan.html" class="nav-item active" id="nav-bulanan">
+            <i class="fas fa-calendar-alt"></i><span>Bulanan</span>
+        </a>
+        <a href="harian.html" class="nav-item" id="nav-harian">
+            <i class="fas fa-edit"></i><span>Harian</span>
+        </a>
+    </nav>
 
-<script>
-    const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec"; 
-    const NAMA_SHEET = "DATA_UI BULANAN"; // Diarahkan ke data Bulanan
-    let rawData = [];
+    <div id="toast"></div>
 
-    async function init() {
-        try {
-            const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(NAMA_SHEET)}&t=${Date.now()}`);
-            const result = await res.json();
-            rawData = result.items; 
-            document.getElementById('data-date').innerText = (result.date || "-");
-            filterData();
-        } catch (e) { document.getElementById('display-area').innerHTML = "Koneksi Terputus..."; }
-    }
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
+        const isBulanan = window.location.pathname.includes('bulanan');
+        const NAMA_SHEET = isBulanan ? "DATA_UI BULANAN" : "DATA_UI TAHUNAN";
 
-    function filterData() {
-        const kVal = document.getElementById('sel-kat').value.toUpperCase();
-        const uVal = document.getElementById('sel-unit').value.toUpperCase();
-        const filtered = rawData.filter(d => (kVal === "ALL" || d.kategori.includes(kVal)) && (uVal === "ALL" || d.unit.includes(uVal)));
-        const totalScore = filtered.reduce((acc, curr) => acc + parseFloat(curr.nilaiKpi), 0);
-        document.getElementById('summary-area').style.display = 'flex';
-        document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        render(filtered);
-    }
+        if (isBulanan) { document.getElementById('nav-bulanan').classList.add('active'); } else { document.getElementById('nav-tahunan').classList.add('active'); }
 
-    function render(data) {
-        const container = document.getElementById('display-area');
-        container.innerHTML = "";
-        data.forEach(item => {
-            const ach = parseFloat(item.persentase) || 0;
-            const gap = item.target - item.realisasi;
-            const fBobot = parseFloat(item.bobot).toLocaleString('id-ID', {maximumFractionDigits: 2});
-            const fScore = parseFloat(item.nilaiKpi).toLocaleString('id-ID', {maximumFractionDigits: 2});
-            const fGap = Math.abs(gap).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        function hideLoader() { document.getElementById('loader').style.opacity = '0'; setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 400); }
+        function showLoader() { document.getElementById('loader').style.display = 'flex'; document.getElementById('loader').style.opacity = '1'; }
 
-            const card = document.createElement('div');
-            card.className = 'kpi-card';
-            card.innerHTML = `
-                <div class="kpi-header"><i class="fas fa-dot-circle"></i> ${item.komponen}</div>
-                <div class="card-body">
-                    <div class="data-row"><span>Bobot/Score</span><span>${fBobot}/${fScore}</span></div>
-                    <div class="data-row"><span>Target</span><span>${Number(item.target).toLocaleString('id-ID')}</span></div>
-                    <div class="data-row"><span>Realisasi</span><span id="real-${item.rowIdx}">${Number(item.realisasi).toLocaleString('id-ID')}</span></div>
-                    <div class="data-row"><span>Kurang</span><span style="color:${gap > 0 ? 'var(--pgd-red)' : '#28a745'}">${fGap}</span></div>
-                    <div class="input-group">
-                        <input type="number" id="in-${item.rowIdx}" placeholder="Input">
-                        <button class="btn-save" onclick="updateData(this, ${item.rowIdx})">SAVE</button>
+        let rawData = [];
+        async function init() {
+            try {
+                const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(NAMA_SHEET)}&t=${Date.now()}`).then(r => r.json());
+                rawData = res.items; document.getElementById('data-date').innerText = res.date || "-";
+                filterData();
+            } catch (e) { console.error(e); } finally { hideLoader(); }
+        }
+
+        // Fungsi untuk Menutup Modal
+        function closeConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; }
+
+        // Fungsi Hard Reset Versi Premium
+        async function hardReset() {
+            const sheet = document.getElementById('sel-sheet') ? document.getElementById('sel-sheet').value : NAMA_SHEET;
+            const modal = document.getElementById('confirm-overlay');
+            const confirmBtn = document.getElementById('btn-confirm-action');
+            const confirmText = document.getElementById('confirm-text');
+
+            // 1. Tampilkan Modal & Set Pesan
+            confirmText.innerText = "Seluruh data di " + sheet + " akan dihapus permanen. Lanjutkan?";
+            const pwInput = document.getElementById('reset-password-input');
+            if (pwInput) pwInput.value = "";
+            modal.style.display = 'flex';
+            if (pwInput) setTimeout(() => pwInput.focus(), 100);
+
+            // 2. Logika Klik Tombol "YA"
+            confirmBtn.onclick = async function () {
+                if (pwInput && pwInput.value !== "Andresandy77") {
+                    showToast('<i class="fas fa-times-circle"></i> Password Otorisasi Salah!');
+                    pwInput.style.borderColor = "var(--pgd-red)";
+                    return;
+                }
+                closeConfirm();
+                showLoader();
+                try {
+                    await fetch(API, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify({ action: 'reset_all', sheet: sheet })
+                    });
+                    // Notifikasi sukses menggunakan toast Pro yang sudah ada
+                    showToast('<i class="fas fa-broom"></i> Data Berhasil Dibersihkan!');
+                    setTimeout(() => { init(); }, 1200);
+                } catch (e) {
+                    alert("Gagal mengosongkan data!");
+                    hideLoader();
+                }
+            };
+        }
+
+        function filterData() {
+            const k = document.getElementById('sel-kat').value.toUpperCase();
+            const u = document.getElementById('sel-unit').value.toUpperCase();
+
+            // 1. FILTER DATA BERDASARKAN UNIT & KATEGORI
+            let filtered = rawData.filter(d => (k === "ALL" || d.kategori.includes(k)) && (u === "ALL" || d.unit.includes(u)));
+
+            // 2. SORTING (PENCAPAIAN TERTINGGI KE TERENDAH)
+            // Gunakan parseFloat untuk memastikan angka persentase terbaca benar
+            filtered.sort((a, b) => {
+                return parseFloat(b.persentase) - parseFloat(a.persentase);
+            });
+
+            // 3. HITUNG TOTAL SKOR KPI (DARI DATA YANG SUDAH TERFILTER & TERSORTIR)
+            const totalScore = filtered.reduce((acc, curr) => acc + parseFloat(curr.nilaiKpi), 0);
+
+            // TAMPILKAN TOTAL PADA GOLD BAR
+            document.getElementById('summary-area').style.display = 'flex';
+            document.getElementById('total-kpi-val').innerText = totalScore.toLocaleString('id-ID', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            // 4. KIRIM DATA KE RENDER UNTUK DITAMPILKAN
+            render(filtered);
+        }
+
+        function render(data) {
+            const cont = document.getElementById('display-area'); cont.innerHTML = "";
+            data.forEach(i => {
+                const ach = parseFloat(i.persentase) || 0; const gap = i.target - i.realisasi;
+                cont.innerHTML += `
+                <div class="kpi-card">
+                    <div class="kpi-header"><i class="fas fa-dot-circle" style="color:var(--pgd-gold)"></i> ${i.komponen}</div>
+                    <div style="padding:10px 15px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:3px 0; border-bottom:1px dashed #eee; margin-bottom:5px;">
+                            <span style="color:#777;">Bobot Target / Pencapaian</span>
+                            <span style="font-weight:800; color:var(--pgd-hijau);">${parseFloat(i.bobot).toFixed(2)} / ${parseFloat(i.nilaiKpi).toFixed(2)}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Target</span><span style="font-weight:800;">${Number(i.target).toLocaleString('id-ID')}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Realisasi</span><span style="font-weight:800;">${Number(i.realisasi).toLocaleString('id-ID')}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Kurang</span><span style="font-weight:800; color:${gap > 0 ? 'red' : 'green'}">${Math.abs(gap).toLocaleString('id-ID', { minimumFractionDigits: 2 })}</span></div>
+                        <div class="input-group"><input type="number" id="in-${i.rowIdx}" placeholder="Input"><button class="btn-save" onclick="updateData(this, ${i.rowIdx})">SAVE</button></div>
                     </div>
-                </div>
-                <div class="kpi-footer">
-                    <div class="progress-label"><span>ACHIEVEMENT: ${ach.toFixed(2)}%</span></div>
-                    <div class="progress-bg"><div class="progress-fill" style="width:${Math.min(ach, 100)}%"></div></div>
+                    <div style="padding:8px 15px; background:#fff;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:900; color:#999; margin-bottom:5px;"><span>PROGRESS</span><span style="color:var(--pgd-hijau); font-size:0.7rem;">${ach.toFixed(2)}%</span></div>
+                        <div style="background:#eee; height:6px; border-radius:10px; overflow:hidden;"><div style="height:100%; width:${Math.min(ach, 100)}%; background:linear-gradient(90deg, #FDB913, #28a745); transition: 1s ease;"></div></div>
+                    </div>
                 </div>`;
-            container.appendChild(card);
-        });
-    }
+            });
+        }
 
-    async function updateData(btn, idx) {
-        const val = parseFloat(document.getElementById(`in-${idx}`).value);
-        if(!val) return; btn.innerText = "...";
-        try {
-            await fetch(API, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ rowIdx: idx, value: val, sheet: NAMA_SHEET }) });
-            document.getElementById("toast").className = "show";
-            setTimeout(() => { document.getElementById("toast").className = ""; init(); }, 2000);
-        } catch (e) { btn.innerText = "SAVE"; }
-    }
-    window.onload = init;
-</script>
+        // Fungsi Update Data dengan Efek Berkedip
+        // GANTI ATAU TAMBAHKAN DI PALING BAWAH SCRIPT
+        async function updateData(btn, idx) {
+            const valInput = document.getElementById(`in-${idx}`).value;
+            const val = parseFloat(valInput);
+            if (isNaN(val)) return;
+
+            const originalText = btn.innerText;
+            btn.innerText = "...";
+
+            // Deteksi otomatis nama sheet
+            const sheet = document.getElementById('sel-sheet') ? document.getElementById('sel-sheet').value : NAMA_SHEET;
+
+            try {
+                await fetch(API, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ rowIdx: idx, value: val, sheet: sheet })
+                });
+
+                // EFEK BERKEDIP
+                document.body.classList.add('flash-effect');
+                setTimeout(() => { document.body.classList.remove('flash-effect'); }, 400);
+
+                showToast('<i class="fas fa-check-circle"></i> Berhasil Diupdate!');
+                document.getElementById(`in-${idx}`).value = "";
+
+                // Refresh data tanpa loading putih
+                initSilent(sheet);
+
+            } catch (e) {
+                btn.innerText = originalText;
+                alert("Gagal koneksi!");
+            } finally {
+                btn.innerText = originalText;
+            }
+        }
+
+        async function initSilent(sheetName) {
+            try {
+                const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`).then(r => r.json());
+
+                // Update variabel data sesuai file masing-masing
+                if (typeof raw !== 'undefined') raw = res.items; // Untuk harian
+                if (typeof rawData !== 'undefined') rawData = res.items; // Untuk kpi/bulanan
+
+                filter(); // Jalankan penyusunan ulang tampilan
+            } catch (e) { console.error("Silent refresh failed"); }
+        }
+
+        function showToast(m) {
+            const t = document.getElementById("toast");
+            t.innerHTML = m;
+            t.className = "show";
+            setTimeout(() => { t.className = ""; }, 2500);
+        }
+        window.onload = init;
+    </script>
+    <div id="confirm-overlay">
+        <div class="confirm-card">
+            <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="confirm-title">KONFIRMASI HAPUS</div>
+            <div class="confirm-msg" id="confirm-text">Apakah Bapak yakin ingin membersihkan seluruh data harian ini?
+            </div>
+            <input type="password" id="reset-password-input" placeholder="Masukkan Password Otorisasi"
+                style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #eee; border-radius: 12px; text-align: center; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #333; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);"
+                onfocus="this.style.borderColor='var(--pgd-hijau)'" onblur="this.style.borderColor='#eee'">
+            <div class="confirm-buttons">
+                <button class="btn-modal btn-no" onclick="closeConfirm()">BATAL</button>
+                <button class="btn-modal btn-yes" id="btn-confirm-action">YA, HAPUS</button>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
