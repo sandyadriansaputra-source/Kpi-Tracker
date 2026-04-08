@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Update Harian - Pegadaian</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body style="touch-action: manipulation;">
+    <div id="loader">
+        <div class="loader-card">
+            <div class="spinner"></div><span
+                style="font-size: 0.65rem; font-weight: 800; color: var(--pgd-hijau); margin-top: 12px; letter-spacing: 1px;">SINKRONISASI...</span>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png"
+            class="logo-img">
+        <h1>INPUT UPDATE HARIAN</h1>
+    </div>
+
+    <div class="premium-score-bar" id="summary-area" style="display:none;">
+        <div class="score-info">
+            <span style="font-size: 0.55rem; color: var(--pgd-red); font-weight: 800; text-transform: uppercase;">Item
+                Shortfall: <strong id="total-bad">0</strong></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button class="btn-wa" onclick="sendWA()"><i class="fab fa-whatsapp" style="font-size:1rem;"></i>
+                KIRIM</button>
+            <div id="data-date" class="date-label">-</div>
+            <div class="btn-hard-reset" onclick="hardReset()"><i class="fas fa-trash-alt"></i></div>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <select id="sel-sheet" onchange="init()">
+            <option value="DATA_UI BULANAN">BULANAN</option>
+            <option value="DATA_UI TAHUNAN">TAHUNAN</option>
+        </select>
+        <select id="sel-unit" onchange="filter()">
+            <option value="all">UNIT: SEMUA</option>
+            <option value="WONOMULYO">WONOMULYO</option>
+            <option value="LUYO">LUYO</option>
+            <option value="SIDODADI">SIDODADI</option>
+            <option value="CAMPALAGIAN">CAMPALAGIAN</option>
+            <option value="PAMBUSUANG">PAMBUSUANG</option>
+        </select>
+    </div>
+
+    <div class="container" id="display-area"></div>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item" id="nav-grafik"><i class="fas fa-chart-pie"></i><span>Grafik</span></a>
+        <a href="kpi.html" class="nav-item" id="nav-tahunan"><i
+                class="fas fa-calendar-check"></i><span>Tahunan</span></a>
+        <a href="bulanan.html" class="nav-item" id="nav-bulanan"><i
+                class="fas fa-calendar-alt"></i><span>Bulanan</span></a>
+        <a href="harian.html" class="nav-item active" id="nav-harian"><i class="fas fa-edit"></i><span>Harian</span></a>
+    </nav>
+
+    <div id="toast"></div>
+
+    <script>
+        const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
+
+        function hideLoader() { const ld = document.getElementById('loader'); ld.style.opacity = '0'; setTimeout(() => { ld.style.display = 'none'; }, 400); }
+        function showLoader() { const ld = document.getElementById('loader'); ld.style.display = 'flex'; ld.style.opacity = '1'; }
+
+        let raw = [];
+        let displayList = [];
+
+        async function init() {
+            showLoader();
+            const sheet = document.getElementById('sel-sheet').value;
+            try {
+                const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`).then(r => r.json());
+                raw = res.items || [];
+                document.getElementById('data-date').innerText = res.date || "UPDATE";
+                filter(false);
+            } catch (e) { console.error(e); } finally { hideLoader(); }
+        }
+
+        function closeConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; }
+
+        async function hardReset() {
+            const sheet = document.getElementById('sel-sheet').value;
+            const modal = document.getElementById('confirm-overlay');
+            const confirmBtn = document.getElementById('btn-confirm-action');
+            const confirmText = document.getElementById('confirm-text');
+
+            confirmText.innerText = "Seluruh data di " + sheet + " akan dihapus permanen. Lanjutkan?";
+            const pwInput = document.getElementById('reset-password-input');
+            if (pwInput) pwInput.value = "";
+            modal.style.display = 'flex';
+            if (pwInput) setTimeout(() => pwInput.focus(), 100);
+
+            confirmBtn.onclick = async function () {
+                if (pwInput && pwInput.value !== "Andresandy77") {
+                    showToast('<i class="fas fa-times-circle"></i> Password Otorisasi Salah!');
+                    pwInput.style.borderColor = "var(--pgd-red)";
+                    return;
+                }
+                closeConfirm();
+                showLoader();
+                try {
+                    await fetch(API, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: JSON.stringify({ action: 'reset_all', sheet: sheet })
+                    });
+                    showToast('<i class="fas fa-broom"></i> Data Berhasil Dibersihkan!');
+                    setTimeout(() => { init(); }, 1200);
+                } catch (e) {
+                    alert("Gagal mengosongkan data!");
+                    hideLoader();
+                }
+            };
+        }
+
+        function filter(isUpdate = false) {
+            const u = document.getElementById('sel-unit').value.toUpperCase();
+
+            if (isUpdate && displayList.length > 0) {
+                displayList = displayList.map(oldItem => {
+                    const freshData = raw.find(r => r.rowIdx === oldItem.rowIdx);
+                    return freshData ? freshData : oldItem;
+                });
+            } else {
+                displayList = raw.filter(d =>
+                    (u === "ALL" || d.unit.includes(u)) &&
+                    parseFloat(d.persentase) <= 100 &&
+                    !d.kategori.includes("CP") &&
+                    !d.komponen.toUpperCase().includes("LABA USAHA")
+                );
+                displayList.sort((a, b) => parseFloat(a.persentase) - parseFloat(b.persentase));
+            }
+
+            document.getElementById('summary-area').style.display = 'flex';
+            document.getElementById('total-bad').innerText = displayList.length;
+
+            render(displayList);
+        }
+
+        function render(data) {
+            const cont = document.getElementById('display-area');
+            if (!data || data.length === 0) {
+                cont.innerHTML = "<div style='text-align:center; padding:50px; color:#666;'>Semua target sudah di atas 100% atau data kosong.</div>";
+                return;
+            }
+
+            cont.innerHTML = data.map(i => {
+                const ach = parseFloat(i.persentase) || 0;
+                const gap = i.target - i.realisasi;
+                const updateHariIni = i.realisasi - i.saldoAwal;
+
+                let barColor = "var(--pgd-red)";
+                if (ach >= 100) barColor = "#198754";
+                else if (ach >= 90) barColor = "var(--pgd-gold)";
+
+                // TAMBAHKAN data-idx PADA CARD DAN CLASS PADA NILAI (Sesuai Desain Bapak)
+                return `
+                <div class="kpi-card" data-idx="${i.rowIdx}" style="border-left: 5px solid ${barColor};">
+                    <div style="padding:10px 15px; border-bottom:1px solid #f0f0f0; background: #fdfdfd;">
+                        <span style="font-size:0.6rem; font-weight:900; color:#999; text-transform:uppercase;">${i.unit}</span>
+                        <div style="font-weight:800; font-size:0.8rem; color:var(--pgd-hijau);">${i.komponen}</div>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:12px 15px;">
+                        <div>
+                            <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TARGET</span>
+                            <span style="font-size:0.75rem; font-weight:800;">${Number(i.target).toLocaleString()}</span>
+                        </div>
+                        <div>
+                            <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TOTAL REALISASI</span>
+                            <span class="val-real" style="font-size:0.75rem; font-weight:800;">${Number(i.realisasi).toLocaleString()}</span>
+                        </div>
+                        <div style="border-top: 1px dashed #eee; padding-top:8px;">
+                            <span style="font-size:0.55rem; font-weight:700; color:${gap > 0 ? 'red' : 'green'}; display:block;">KEKURANGAN</span>
+                            <span class="val-sisa" style="font-size:0.85rem; font-weight:900; color:${gap > 0 ? 'red' : 'green'};">${Math.abs(gap).toLocaleString('id-ID', { minimumFractionDigits: 2 })}</span>
+                        </div>
+                        <div style="border-top: 1px dashed #eee; padding-top:8px;">
+                            <span style="font-size:0.55rem; font-weight:700; color:#198754; display:block;">UPDATE HARI INI</span>
+                            <span class="val-update" style="font-size:0.85rem; font-weight:900; color:var(--pgd-hijau);">
+                                ${updateHariIni > 0 ? '+' + updateHariIni.toLocaleString('id-ID') : '0'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="input-group" style="background: #fffcf0;">
+                        <input type="number" id="in-${i.rowIdx}" placeholder="Input nilai baru...">
+                        <button class="btn-save" onclick="updateData(this, ${i.rowIdx})">SAVE</button>
+                    </div>
+
+                    <div style="padding:10px 15px; background:#fff; border-top:1px solid #f0f0f0;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:900; color:#999; margin-bottom:5px;">
+                            <span>ACHIEVEMENT</span>
+                            <span class="val-persen" style="color:var(--pgd-hijau); font-size:0.75rem;">${ach.toFixed(2)}%</span>
+                        </div>
+                        <div style="background:#eee; height:6px; border-radius:10px; overflow:hidden;">
+                            <div class="progress-fill" style="height:100%; width:${Math.min(ach, 100)}%; background:${barColor}; transition: 1s ease;"></div>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function updateData(btn, idx) {
+            const valInput = document.getElementById(`in-${idx}`).value;
+            const val = parseFloat(valInput);
+            if (isNaN(val) || val === 0) return;
+
+            const originalText = btn.innerText;
+            btn.innerText = "...";
+
+            const sheet = document.getElementById('sel-sheet').value;
+
+            try {
+                // Kirim data ke Google Sheets
+                await fetch(API, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ rowIdx: idx, value: val, sheet: sheet })
+                });
+
+                // Efek Flash
+                document.body.classList.add('flash-effect');
+                setTimeout(() => { document.body.classList.remove('flash-effect'); }, 400);
+
+                // --- PROSES UPDATE LANGSUNG DI LAYAR (ANTI-GESER) ---
+                const item = raw.find(d => d.rowIdx === idx);
+                if (item) {
+                    item.realisasi = parseFloat(item.realisasi) + val;
+                    const target = parseFloat(item.target);
+                    const newPersen = target > 0 ? ((item.realisasi / target) * 100).toFixed(2) : 0;
+                    item.persentase = newPersen;
+                    const sisa = Math.max(0, target - item.realisasi);
+                    const diff = item.realisasi - item.saldoAwal;
+
+                    // Cari kartu yang sedang diinput menggunakan atribut data-idx
+                    const card = document.querySelector(`[data-idx="${idx}"]`);
+                    if (card) {
+                        // Update angka-angka di dalam kartu tersebut saja
+                        const elReal = card.querySelector('.val-real');
+                        const elPct = card.querySelector('.val-persen');
+                        const elSisa = card.querySelector('.val-sisa');
+                        const elUpdate = card.querySelector('.val-update');
+                        const elBar = card.querySelector('.progress-fill');
+
+                        if (elReal) elReal.innerText = item.realisasi.toLocaleString('id-ID');
+                        if (elPct) elPct.innerText = newPersen + '%';
+                        if (elSisa) elSisa.innerText = sisa.toLocaleString('id-ID', { minimumFractionDigits: 2 });
+                        if (elUpdate) elUpdate.innerText = diff > 0 ? '+' + diff.toLocaleString('id-ID') : '0';
+                        if (elBar) elBar.style.width = Math.min(100, newPersen) + '%';
+                    }
+                }
+
+                showToast('<i class="fas fa-check-circle"></i> Berhasil!');
+                document.getElementById(`in-${idx}`).value = "";
+
+                // PENTING: Jangan panggil filter() atau init() di sini agar tidak bergeser!
+
+            } catch (e) {
+                btn.innerText = originalText;
+                alert("Gagal koneksi!");
+            } finally {
+                btn.innerText = originalText;
+            }
+        }
+
+        function showToast(m) {
+            const t = document.getElementById("toast");
+            t.innerHTML = m;
+            t.classList.add("show");
+            setTimeout(() => { t.classList.remove("show"); }, 2500);
+        }
+
+        window.onload = init;
+
+        function sendWA() {
+            // Mengambil tanggal hari ini (saat input/kirim) tanpa jam
+            const tglInput = new Date().toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+
+            const allShortfall = raw.filter(d =>
+                parseFloat(d.persentase) <= 100 &&
+                !d.kategori.includes("CP") &&
+                !d.komponen.toUpperCase().includes("LABA USAHA")
+            );
+
+            const activeUnits = [...new Set(allShortfall
+                .filter(item => (item.realisasi - item.saldoAwal) > 0)
+                .map(item => item.unit)
+            )];
+
+            if (activeUnits.length === 0) {
+                showToast('<i class="fas fa-info-circle"></i> Belum ada unit yang input hari ini');
+                return;
+            }
+
+            let pesan = `*DAILY REPORT UPDATE HARIAN*\n`;
+            pesan += `*Tanggal Input:* ${tglInput}\n`;
+            pesan += `──────────────────\n\n`;
+
+            activeUnits.forEach(unitName => {
+                pesan += `*UNIT: ${unitName}*\n`;
+                const unitItems = allShortfall.filter(d => d.unit === unitName);
+                unitItems.forEach((item, index) => {
+                    const updateHariIni = item.realisasi - item.saldoAwal;
+                    const displayNilai = updateHariIni > 0 ? updateHariIni.toLocaleString('id-ID') : "-";
+                    pesan += `${index + 1}. ${item.komponen} : *${displayNilai}*\n`;
+                });
+                pesan += `\n`;
+            });
+
+            pesan += `_Generated by Digital Dashboard CP_Wonomulyo_`;
+            const waUrl = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
+            window.open(waUrl, '_blank');
+        }
+    </script>
+
+    <div id="confirm-overlay"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+        <div class="confirm-card">
+            <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="confirm-title">KONFIRMASI HAPUS</div>
+            <div class="confirm-msg" id="confirm-text">Apakah Bapak yakin ingin membersihkan seluruh data harian ini?
+            </div>
+            <input type="password" id="reset-password-input" placeholder="Masukkan Password Otorisasi"
+                style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #eee; border-radius: 12px; text-align: center; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #333; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);"
+                onfocus="this.style.borderColor='var(--pgd-hijau)'" onblur="this.style.borderColor='#eee'">
+            <div class="confirm-buttons">
+                <button class="btn-modal btn-no" onclick="closeConfirm()">BATAL</button>
+                <button class="btn-modal btn-yes" id="btn-confirm-action">YA, HAPUS</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
