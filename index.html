@@ -77,8 +77,8 @@
         async function init() {
             try {
                 const [resB, resT] = await Promise.all([
-                    fetch(`${API}?action=read&sheet=DATA_UI BULANAN&t=${Date.now()}`).then(r => r.json()),
-                    fetch(`${API}?action=read&sheet=DATA_UI TAHUNAN&t=${Date.now()}`).then(r => r.json())
+                    fetch(`${API}?action=read&sheet=KPI TRACKER BLN&t=${Date.now()}`).then(r => r.json()),
+                    fetch(`${API}?action=read&sheet=KPI TRACKER THN&t=${Date.now()}`).then(r => r.json())
                 ]);
                 document.getElementById('data-date').innerText = `Update: ${resB.date || "-"}`;
                 renderCP(resB.items, resT.items);
