@@ -154,6 +154,13 @@
                 const ach = parseFloat(i.persentase) || 0;
                 const gap = i.target - i.realisasi;
                 const updateHariIni = i.realisasi - i.saldoAwal;
+                const decimalComponents = [
+                    "npl emas", "cashless disbursement", "lar gadai", "npl non gadai", 
+                    "lar emas", "lar non gadai", "tabungan emas", "te sinergi holding", 
+                    "deposito emas", "npl gadai", "gramasi produk galeri 24"
+                ];
+                const cmp = i.komponen ? i.komponen.toLowerCase() : "";
+                const keepDecimals = decimalComponents.some(d => cmp.includes(d));
 
                 let barColor = "var(--pgd-red)";
                 if (ach >= 100) barColor = "#198754";
@@ -169,15 +176,15 @@
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:12px 15px;">
                         <div>
                             <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TARGET</span>
-                            <span style="font-size:0.75rem; font-weight:800;">${Number(i.target).toLocaleString()}</span>
+                            <span style="font-size:0.75rem; font-weight:800;">${keepDecimals ? Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
                         <div>
                             <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TOTAL REALISASI</span>
-                            <span class="val-real" style="font-size:0.75rem; font-weight:800;">${Number(i.realisasi).toLocaleString()}</span>
+                            <span class="val-real" style="font-size:0.75rem; font-weight:800;">${keepDecimals ? Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
                         <div style="border-top: 1px dashed #eee; padding-top:8px;">
                             <span style="font-size:0.55rem; font-weight:700; color:${gap > 0 ? 'red' : 'green'}; display:block;">KEKURANGAN</span>
-                            <span class="val-sisa" style="font-size:0.85rem; font-weight:900; color:${gap > 0 ? 'red' : 'green'};">${Math.abs(gap).toLocaleString('id-ID', { minimumFractionDigits: 2 })}</span>
+                            <span class="val-sisa" style="font-size:0.85rem; font-weight:900; color:${gap > 0 ? 'red' : 'green'};">${keepDecimals ? Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
                         <div style="border-top: 1px dashed #eee; padding-top:8px;">
                             <span style="font-size:0.55rem; font-weight:700; color:#198754; display:block;">UPDATE HARI INI</span>
@@ -241,9 +248,17 @@
                         const elUpdate = card.querySelector('.val-update');
                         const elBar = card.querySelector('.progress-fill');
 
-                        if (elReal) elReal.innerText = item.realisasi.toLocaleString('id-ID');
+                        const decimalComponents = [
+                            "npl emas", "cashless disbursement", "lar gadai", "npl non gadai", 
+                            "lar emas", "lar non gadai", "tabungan emas", "te sinergi holding", 
+                            "deposito emas", "npl gadai", "gramasi produk galeri 24"
+                        ];
+                        const cmp = item.komponen ? item.komponen.toLowerCase() : "";
+                        const keepDecimals = decimalComponents.some(d => cmp.includes(d));
+
+                        if (elReal) elReal.innerText = keepDecimals ? item.realisasi.toLocaleString('id-ID', { maximumFractionDigits: 2 }) : item.realisasi.toLocaleString('id-ID', { maximumFractionDigits: 0 });
                         if (elPct) elPct.innerText = newPersen + '%';
-                        if (elSisa) elSisa.innerText = sisa.toLocaleString('id-ID', { minimumFractionDigits: 2 });
+                        if (elSisa) elSisa.innerText = keepDecimals ? sisa.toLocaleString('id-ID', { maximumFractionDigits: 2 }) : sisa.toLocaleString('id-ID', { maximumFractionDigits: 0 });
                         if (elUpdate) elUpdate.innerText = diff > 0 ? '+' + diff.toLocaleString('id-ID') : '0';
                         if (elBar) elBar.style.width = Math.min(100, newPersen) + '%';
                     }
