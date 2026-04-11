@@ -19,7 +19,7 @@
 
     <div class="header">
         <img src="https://monev.pegadaian.co.id/userdata/profile_site/5662a273c270a215cdc46900d8a882f280e84b32c3f02.png"
-            class="logo-img">
+            class="logo-img" alt="Logo Pegadaian">
         <h1>INPUT UPDATE HARIAN</h1>
     </div>
 
@@ -38,8 +38,7 @@
 
     <div class="filter-section">
         <select id="sel-sheet" onchange="init()">
-            <option value="DATA_UI BULANAN">BULANAN</option>
-            <option value="DATA_UI TAHUNAN">TAHUNAN</option>
+            <option value="UPDATE DATA HARIAN">HARIAN</option>
         </select>
         <select id="sel-unit" onchange="filter()">
             <option value="all">UNIT: SEMUA</option>
@@ -65,7 +64,7 @@
     <div id="toast"></div>
 
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbzOevko6R6UBXlQGTARR2F-t6TGw-xXlhCOWQsjLI20tI8qtnMD6I3OF_An__W45cTFig/exec";
+        const API = "https://script.google.com/macros/s/AKfycbzCxMQszKz1pbjtM6b1LkAECP-IGbxSimGDXNFOzHdTYfj7iJ-TYDwcsV97hsYs1ee7qA/exec";
 
         function hideLoader() { const ld = document.getElementById('loader'); ld.style.opacity = '0'; setTimeout(() => { ld.style.display = 'none'; }, 400); }
         function showLoader() { const ld = document.getElementById('loader'); ld.style.display = 'flex'; ld.style.opacity = '1'; }
@@ -132,9 +131,8 @@
             } else {
                 displayList = raw.filter(d =>
                     (u === "ALL" || d.unit.includes(u)) &&
-                    parseFloat(d.persentase) <= 100 &&
-                    !d.kategori.includes("CP") &&
-                    !d.komponen.toUpperCase().includes("LABA USAHA")
+                    (d.kategori && d.kategori.includes("UPC")) &&
+                    (!d.komponen || !d.komponen.toUpperCase().includes("LABA USAHA"))
                 );
                 displayList.sort((a, b) => parseFloat(a.persentase) - parseFloat(b.persentase));
             }
@@ -161,7 +159,6 @@
                 if (ach >= 100) barColor = "#198754";
                 else if (ach >= 90) barColor = "var(--pgd-gold)";
 
-                // TAMBAHKAN data-idx PADA CARD DAN CLASS PADA NILAI (Sesuai Desain Bapak)
                 return `
                 <div class="kpi-card" data-idx="${i.rowIdx}" style="border-left: 5px solid ${barColor};">
                     <div style="padding:10px 15px; border-bottom:1px solid #f0f0f0; background: #fdfdfd;">
@@ -215,22 +212,18 @@
 
             const originalText = btn.innerText;
             btn.innerText = "...";
-
             const sheet = document.getElementById('sel-sheet').value;
 
             try {
-                // Kirim data ke Google Sheets
                 await fetch(API, {
                     method: 'POST',
                     mode: 'no-cors',
                     body: JSON.stringify({ rowIdx: idx, value: val, sheet: sheet })
                 });
 
-                // Efek Flash
                 document.body.classList.add('flash-effect');
                 setTimeout(() => { document.body.classList.remove('flash-effect'); }, 400);
 
-                // --- PROSES UPDATE LANGSUNG DI LAYAR (ANTI-GESER) ---
                 const item = raw.find(d => d.rowIdx === idx);
                 if (item) {
                     item.realisasi = parseFloat(item.realisasi) + val;
@@ -240,10 +233,8 @@
                     const sisa = Math.max(0, target - item.realisasi);
                     const diff = item.realisasi - item.saldoAwal;
 
-                    // Cari kartu yang sedang diinput menggunakan atribut data-idx
                     const card = document.querySelector(`[data-idx="${idx}"]`);
                     if (card) {
-                        // Update angka-angka di dalam kartu tersebut saja
                         const elReal = card.querySelector('.val-real');
                         const elPct = card.querySelector('.val-persen');
                         const elSisa = card.querySelector('.val-sisa');
@@ -260,8 +251,6 @@
 
                 showToast('<i class="fas fa-check-circle"></i> Berhasil!');
                 document.getElementById(`in-${idx}`).value = "";
-
-                // PENTING: Jangan panggil filter() atau init() di sini agar tidak bergeser!
 
             } catch (e) {
                 btn.innerText = originalText;
@@ -280,8 +269,8 @@
 
         window.onload = init;
 
+        // FUNGSI KIRIM WHATSAPP DENGAN INTENT (SOLUSI ANTI-BROWSER)
         function sendWA() {
-            // Mengambil tanggal hari ini (saat input/kirim) tanpa jam
             const tglInput = new Date().toLocaleDateString('id-ID', {
                 day: 'numeric',
                 month: 'long',
@@ -289,9 +278,8 @@
             });
 
             const allShortfall = raw.filter(d =>
-                parseFloat(d.persentase) <= 100 &&
-                !d.kategori.includes("CP") &&
-                !d.komponen.toUpperCase().includes("LABA USAHA")
+                (d.kategori && d.kategori.includes("UPC")) &&
+                (!d.komponen || !d.komponen.toUpperCase().includes("LABA USAHA"))
             );
 
             const activeUnits = [...new Set(allShortfall
@@ -320,8 +308,12 @@
             });
 
             pesan += `_Generated by Digital Dashboard CP_Wonomulyo_`;
-            const waUrl = `https://wa.me/?text=${encodeURIComponent(pesan)}`;
-            window.open(waUrl, '_blank');
+
+            // Perubahan Menggunakan Intent Android
+            const pesanEncode = encodeURIComponent(pesan);
+            const waIntent = `intent://send/?text=${pesanEncode}#Intent;scheme=whatsapp;package=com.whatsapp;end`;
+
+            window.location.href = waIntent;
         }
     </script>
 
