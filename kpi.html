@@ -71,7 +71,7 @@
     <script>
         const API = "https://script.google.com/macros/s/AKfycbzCxMQszKz1pbjtM6b1LkAECP-IGbxSimGDXNFOzHdTYfj7iJ-TYDwcsV97hsYs1ee7qA/exec";
         const isBulanan = window.location.pathname.includes('bulanan');
-        const NAMA_SHEET = isBulanan ? "DATA_UI BULANAN" : "DATA_UI TAHUNAN";
+        const NAMA_SHEET = isBulanan ? "KPI TRACKER BLN" : "KPI TRACKER THN";
 
         if (isBulanan) { document.getElementById('nav-bulanan').classList.add('active'); } else { document.getElementById('nav-tahunan').classList.add('active'); }
 
@@ -100,13 +100,13 @@
             // 1. Tampilkan Modal & Set Pesan
             confirmText.innerText = "Seluruh data di " + sheet + " akan dihapus permanen. Lanjutkan?";
             const pwInput = document.getElementById('reset-password-input');
-            if(pwInput) pwInput.value = "";
+            if (pwInput) pwInput.value = "";
             modal.style.display = 'flex';
-            if(pwInput) setTimeout(() => pwInput.focus(), 100);
+            if (pwInput) setTimeout(() => pwInput.focus(), 100);
 
             // 2. Logika Klik Tombol "YA"
             confirmBtn.onclick = async function () {
-                if(pwInput && pwInput.value !== "Andresandy77") {
+                if (pwInput && pwInput.value !== "Andresandy77") {
                     showToast('<i class="fas fa-times-circle"></i> Password Otorisasi Salah!');
                     pwInput.style.borderColor = "var(--pgd-red)";
                     return;
@@ -245,7 +245,7 @@
             <div class="confirm-title">KONFIRMASI HAPUS</div>
             <div class="confirm-msg" id="confirm-text">Apakah Bapak yakin ingin membersihkan seluruh data harian ini?
             </div>
-            <input type="password" id="reset-password-input" placeholder="Masukkan Password Otorisasi" 
+            <input type="password" id="reset-password-input" placeholder="Masukkan Password Otorisasi"
                 style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #eee; border-radius: 12px; text-align: center; font-family: inherit; font-size: 0.8rem; font-weight: 700; color: #333; outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);"
                 onfocus="this.style.borderColor='var(--pgd-hijau)'" onblur="this.style.borderColor='#eee'">
             <div class="confirm-buttons">
