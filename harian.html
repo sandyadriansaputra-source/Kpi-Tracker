@@ -160,7 +160,7 @@
                     "deposito emas", "npl gadai", "gramasi produk galeri 24"
                 ];
                 const cmp = i.komponen ? i.komponen.toLowerCase() : "";
-                const keepDecimals = decimalComponents.some(d => cmp.includes(d));
+                const keepDecimals = decimalComponents.some(d => cmp.includes(d)) && !cmp.includes("nasabah");
 
                 let barColor = "var(--pgd-red)";
                 if (ach >= 100) barColor = "#198754";
@@ -254,7 +254,7 @@
                             "deposito emas", "npl gadai", "gramasi produk galeri 24"
                         ];
                         const cmp = item.komponen ? item.komponen.toLowerCase() : "";
-                        const keepDecimals = decimalComponents.some(d => cmp.includes(d));
+                        const keepDecimals = decimalComponents.some(d => cmp.includes(d)) && !cmp.includes("nasabah");
 
                         if (elReal) elReal.innerText = keepDecimals ? item.realisasi.toLocaleString('id-ID', { maximumFractionDigits: 2 }) : item.realisasi.toLocaleString('id-ID', { maximumFractionDigits: 0 });
                         if (elPct) elPct.innerText = newPersen + '%';

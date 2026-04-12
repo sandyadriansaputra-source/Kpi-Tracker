@@ -166,7 +166,7 @@
             data.forEach(i => {
                 const ach = parseFloat(i.persentase) || 0; const gap = i.target - i.realisasi;
                 const cmp = i.komponen ? i.komponen.toLowerCase() : "";
-                const keepDecimals = decimalComponents.some(d => cmp.includes(d));
+                const keepDecimals = decimalComponents.some(d => cmp.includes(d)) && !cmp.includes("nasabah");
                 cont.innerHTML += `
                 <div class="kpi-card">
                     <div class="kpi-header"><i class="fas fa-dot-circle" style="color:var(--pgd-gold)"></i> ${i.komponen}</div>
