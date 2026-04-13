@@ -157,19 +157,28 @@
         }
 
         function render(data) {
-            const cont = document.getElementById('display-area'); cont.innerHTML = "";
+            const cont = document.getElementById('display-area');
             const decimalComponents = [
                 "npl emas", "cashless disbursement", "lar gadai", "npl non gadai",
                 "lar emas", "lar non gadai", "tabungan emas", "te sinergi holding",
                 "deposito emas", "npl gadai", "gramasi produk galeri 24"
             ];
-            data.forEach(i => {
-                const ach = parseFloat(i.persentase) || 0; const gap = i.target - i.realisasi;
+            cont.innerHTML = data.map(i => {
+                const ach = parseFloat(i.persentase) || 0;
+                const gap = i.target - i.realisasi;
                 const cmp = i.komponen ? i.komponen.toLowerCase() : "";
                 const keepDecimals = decimalComponents.some(d => cmp.includes(d)) && !cmp.includes("nasabah");
-                cont.innerHTML += `
+                return `
                 <div class="kpi-card">
-                    <div class="kpi-header"><i class="fas fa-dot-circle" style="color:var(--pgd-gold)"></i> ${i.komponen}</div>
+                    <div class="kpi-card-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <i class="fas fa-dot-circle" style="color:var(--pgd-gold)"></i> 
+                            ${i.komponen}
+                        </div>
+                        <div class="help-icon-btn" onclick="showHelp('${i.komponen.replace(/'/g, "\\'")}', '${(i.keterangan || 'Belum ada detail untuk komponen ini.').replace(/'/g, "\\'")}')">
+                            <i class="fas fa-question"></i>
+                        </div>
+                    </div>
                     <div style="padding:10px 15px;">
                         <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:3px 0; border-bottom:1px dashed #eee; margin-bottom:5px;">
                             <span style="color:#777;">Bobot Target / Pencapaian</span>
@@ -185,7 +194,7 @@
                         <div style="background:#eee; height:6px; border-radius:10px; overflow:hidden;"><div style="height:100%; width:${Math.min(ach, 100)}%; background:linear-gradient(90deg, #FDB913, #28a745); transition: 1s ease;"></div></div>
                     </div>
                 </div>`;
-            });
+            }).join('');
         }
 
         // Fungsi Update Data dengan Efek Berkedip
@@ -244,6 +253,21 @@
             t.className = "show";
             setTimeout(() => { t.className = ""; }, 2500);
         }
+
+        function showHelp(title, text) {
+            document.getElementById('help-title').innerText = title;
+            document.getElementById('help-text').innerText = text;
+            const overlay = document.getElementById('help-overlay');
+            overlay.style.display = 'flex';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        }
+
+        function closeHelp() {
+            const overlay = document.getElementById('help-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
         window.onload = init;
     </script>
     <div id="confirm-overlay">
@@ -259,6 +283,18 @@
                 <button class="btn-modal btn-no" onclick="closeConfirm()">BATAL</button>
                 <button class="btn-modal btn-yes" id="btn-confirm-action">YA, HAPUS</button>
             </div>
+        </div>
+    </div>
+    <div id="help-overlay" style="display:none;">
+        <div class="help-card">
+            <div class="help-header">
+                <div class="help-title-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="help-title-text" id="help-title">DETAIL KOMPONEN</div>
+            </div>
+            <div class="help-content" id="help-text">
+                Keterangan detail mengenai komponen ini akan muncul di sini.
+            </div>
+            <button class="btn-close-help" onclick="closeHelp()">MENGERTI</button>
         </div>
     </div>
 </body>
