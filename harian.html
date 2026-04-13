@@ -168,9 +168,14 @@
 
                 return `
                 <div class="kpi-card" data-idx="${i.rowIdx}" style="border-left: 5px solid ${barColor};">
-                    <div style="padding:10px 15px; border-bottom:1px solid #f0f0f0; background: #fdfdfd;">
-                        <span style="font-size:0.6rem; font-weight:900; color:#999; text-transform:uppercase;">${i.unit}</span>
-                        <div style="font-weight:800; font-size:0.8rem; color:var(--pgd-hijau);">${i.komponen}</div>
+                    <div class="kpi-card-header">
+                        <div>
+                            <span style="font-size:0.6rem; font-weight:900; color:#999; text-transform:uppercase;">${i.unit}</span>
+                            <div style="font-weight:800; font-size:0.8rem; color:var(--pgd-hijau);">${i.komponen}</div>
+                        </div>
+                        <div class="help-icon-btn" onclick="showHelp('${i.komponen.replace(/'/g, "\\'")}', '${(i.keterangan || 'Belum ada detail untuk komponen ini.').replace(/'/g, "\\'")}')">
+                            <i class="fas fa-question"></i>
+                        </div>
                     </div>
                     
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:12px 15px;">
@@ -282,6 +287,21 @@
             setTimeout(() => { t.classList.remove("show"); }, 2500);
         }
 
+        function showHelp(title, text) {
+            document.getElementById('help-title').innerText = title;
+            document.getElementById('help-text').innerText = text;
+            const overlay = document.getElementById('help-overlay');
+            overlay.style.display = 'flex';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        }
+
+        function closeHelp() {
+            const overlay = document.getElementById('help-overlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
         window.onload = init;
 
         // FUNGSI KIRIM WHATSAPP DENGAN INTENT (SOLUSI ANTI-BROWSER)
@@ -346,6 +366,19 @@
                 <button class="btn-modal btn-no" onclick="closeConfirm()">BATAL</button>
                 <button class="btn-modal btn-yes" id="btn-confirm-action">YA, HAPUS</button>
             </div>
+        </div>
+    </div>
+
+    <div id="help-overlay" style="display:none;">
+        <div class="help-card">
+            <div class="help-header">
+                <div class="help-title-icon"><i class="fas fa-info-circle"></i></div>
+                <div class="help-title-text" id="help-title">DETAIL KOMPONEN</div>
+            </div>
+            <div class="help-content" id="help-text">
+                Keterangan detail mengenai komponen ini akan muncul di sini.
+            </div>
+            <button class="btn-close-help" onclick="closeHelp()">MENGERTI</button>
         </div>
     </div>
 </body>

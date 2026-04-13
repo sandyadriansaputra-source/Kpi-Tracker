@@ -508,3 +508,116 @@ input {
     margin-left: 8px;
     /* Opsional: jika ingin teksnya tidak terlalu tebal */
 }
+
+/* HELP ICON & MODAL - EXECUTIVE PRO */
+.kpi-card-header {
+    position: relative;
+    padding: 10px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fdfdfd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.help-icon-btn {
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    color: #FDB913;
+    border: 1px solid #FDB913;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 2px 5px rgba(253, 185, 19, 0.2);
+}
+
+.help-icon-btn:active {
+    transform: scale(0.85);
+    background: #fffcf0;
+}
+
+#help-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 12000;
+}
+
+.help-card {
+    background: #fff;
+    width: 85%;
+    max-width: 340px;
+    border-radius: 25px;
+    padding: 25px;
+    text-align: left;
+    box-shadow: 0 20px 60px rgba(0, 51, 25, 0.2);
+    border: 1.5px solid rgba(253, 185, 19, 0.3);
+    animation: modalPop 0.3s ease-out;
+}
+
+.help-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #fffcf0;
+    padding-bottom: 12px;
+}
+
+.help-title-icon {
+    width: 40px;
+    height: 40px;
+    background: #fffcf0;
+    color: #FDB913;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    border: 1.5px solid #FDB913;
+}
+
+.help-title-text {
+    font-weight: 900;
+    color: var(--pgd-hijau);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.help-content {
+    font-size: 0.75rem;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-weight: 600;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 15px;
+    border-left: 4px solid var(--pgd-gold);
+}
+
+.btn-close-help {
+    width: 100%;
+    padding: 12px;
+    background: var(--pgd-hijau);
+    color: var(--pgd-gold);
+    border: none;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(0, 51, 25, 0.2);
+}
