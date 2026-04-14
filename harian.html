@@ -125,7 +125,7 @@
 
             if (isUpdate && displayList.length > 0) {
                 displayList = displayList.map(oldItem => {
-                    const freshData = raw.find(r => r.rowIdx === oldItem.rowIdx);
+                    const freshData = raw.find(r => r.rowIdx == oldItem.rowIdx);
                     return freshData ? freshData : oldItem;
                 });
             } else {
@@ -230,13 +230,13 @@
                 await fetch(API, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ rowIdx: idx, value: val, sheet: sheet })
+                    body: JSON.stringify({ action: 'update', rowIdx: idx, value: val, sheet: sheet })
                 });
 
                 document.body.classList.add('flash-effect');
                 setTimeout(() => { document.body.classList.remove('flash-effect'); }, 400);
 
-                const item = raw.find(d => d.rowIdx === idx);
+                const item = raw.find(d => d.rowIdx == idx);
                 if (item) {
                     item.realisasi = parseFloat(item.realisasi) + val;
                     const target = parseFloat(item.target);
@@ -272,12 +272,24 @@
                 showToast('<i class="fas fa-check-circle"></i> Berhasil!');
                 document.getElementById(`in-${idx}`).value = "";
 
+                // Refresh data tanpa loading putih untuk sinkronisasi total
+                initSilent(sheet);
+
             } catch (e) {
                 btn.innerText = originalText;
                 alert("Gagal koneksi!");
             } finally {
                 btn.innerText = originalText;
             }
+        }
+
+        async function initSilent(sheetName) {
+            try {
+                const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`).then(r => r.json());
+                raw = res.items || [];
+                document.getElementById('data-date').innerText = res.date || "UPDATE";
+                filter(true); // IsUpdate = true agar tidak flicker parah
+            } catch (e) { console.error("Silent refresh failed", e); }
         }
 
         function showToast(m) {

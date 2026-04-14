@@ -214,7 +214,7 @@
                 await fetch(API, {
                     method: 'POST',
                     mode: 'no-cors',
-                    body: JSON.stringify({ rowIdx: idx, value: val, sheet: sheet })
+                    body: JSON.stringify({ action: 'update', rowIdx: idx, value: val, sheet: sheet })
                 });
 
                 // EFEK BERKEDIP
@@ -243,7 +243,7 @@
                 if (typeof raw !== 'undefined') raw = res.items; // Untuk harian
                 if (typeof rawData !== 'undefined') rawData = res.items; // Untuk kpi/bulanan
 
-                filter(); // Jalankan penyusunan ulang tampilan
+                filterData(); // Jalankan penyusunan ulang tampilan
             } catch (e) { console.error("Silent refresh failed"); }
         }
 
