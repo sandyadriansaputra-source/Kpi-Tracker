@@ -152,14 +152,24 @@
 
             cont.innerHTML = data.map(i => {
                 const ach = parseFloat(i.persentase) || 0;
-                const gap = i.target - i.realisasi;
+                let gap = i.target - i.realisasi;
+                const cmp = i.komponen ? i.komponen.toLowerCase() : "";
+
+                if (cmp.includes("delta osl pencairan gadai") || cmp.includes("delta osl pencairan non gadai")) {
+                    const today = new Date();
+                    const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    const todayDate = today.getDate();
+                    let sisaHari = endOfMonth.getDate() - todayDate;
+                    if (sisaHari <= 0) sisaHari = 1; // mencegah division by zero
+                    gap = ((((i.target * 30) - (i.realisasi * todayDate)) / sisaHari) - i.realisasi) / 7;
+                }
+
                 const updateHariIni = i.realisasi - i.saldoAwal;
                 const decimalComponents = [
                     "npl emas", "cashless disbursement", "lar gadai", "npl non gadai",
                     "lar emas", "lar non gadai", "tabungan emas", "te sinergi holding",
                     "deposito emas", "npl gadai", "gramasi produk galeri 24"
                 ];
-                const cmp = i.komponen ? i.komponen.toLowerCase() : "";
                 const keepDecimals = decimalComponents.some(d => cmp.includes(d)) && !cmp.includes("nasabah");
 
                 let barColor = "var(--pgd-red)";
@@ -242,7 +252,18 @@
                     const target = parseFloat(item.target);
                     const newPersen = target > 0 ? ((item.realisasi / target) * 100).toFixed(2) : 0;
                     item.persentase = newPersen;
-                    const sisa = Math.max(0, target - item.realisasi);
+
+                    let sisaRaw = target - item.realisasi;
+                    const cmpLower = item.komponen ? item.komponen.toLowerCase() : "";
+                    if (cmpLower.includes("delta osl pencairan gadai") || cmpLower.includes("delta osl pencairan non gadai")) {
+                        const today = new Date();
+                        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                        const todayDate = today.getDate();
+                        let sisaHari = endOfMonth.getDate() - todayDate;
+                        if (sisaHari <= 0) sisaHari = 1;
+                        sisaRaw = ((((target * 30) - (item.realisasi * todayDate)) / sisaHari) - item.realisasi) / 7;
+                    }
+                    const sisa = Math.max(0, sisaRaw);
                     const diff = item.realisasi - item.saldoAwal;
 
                     const card = document.querySelector(`[data-idx="${idx}"]`);
