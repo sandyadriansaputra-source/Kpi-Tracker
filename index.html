@@ -34,6 +34,7 @@
         <div class="kpi-card">
             <div id="cp-list-container"></div>
         </div>
+
         <div
             style="font-size: 0.65rem; font-weight: 900; color: #f8f7f7; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 10px 0;">
             RANKING PERFORMA UPC</div>
@@ -46,6 +47,13 @@
             <div class="kpi-header">TOTAL SKOR TAHUNAN</div>
             <div class="card-body" style="padding:10px;"><canvas id="chartUPCTahunan"
                     style="max-height: 250px;"></canvas></div>
+        </div>
+
+        <div
+            style="font-size: 0.65rem; font-weight: 900; color: #f8f7f7; text-transform: uppercase; letter-spacing: 1.5px; border-left: 3px solid var(--pgd-gold); padding-left: 10px; margin: 15px 0 10px 0;">
+            SCORE CARD KPI HARIAN - BULANAN</div>
+        <div class="kpi-card">
+            <div id="score-card-container"></div>
         </div>
     </div>
 
@@ -76,12 +84,14 @@
 
         async function init() {
             try {
-                const [resB, resT] = await Promise.all([
+                const [resB, resT, resS] = await Promise.all([
                     fetch(`${API}?action=read&sheet=KPI TRACKER BLN&t=${Date.now()}`).then(r => r.json()),
-                    fetch(`${API}?action=read&sheet=KPI TRACKER THN&t=${Date.now()}`).then(r => r.json())
+                    fetch(`${API}?action=read&sheet=KPI TRACKER THN&t=${Date.now()}`).then(r => r.json()),
+                    fetch(`${API}?action=read&sheet=Score%20Card&t=${Date.now()}`).then(r => r.json())
                 ]);
                 document.getElementById('data-date').innerText = `Update: ${resB.date || "-"}`;
                 renderCP(resB.items, resT.items);
+                renderScoreCard(resS.items);
                 createChart('chartUPCBulanan', processUPC(resB.items));
                 createChart('chartUPCTahunan', processUPC(resT.items));
             } catch (e) { console.error(e); } finally { hideLoader(); }
@@ -118,6 +128,48 @@
                         <div style="display:flex; align-items:baseline; gap:4px;">
                             <span style="font-size:0.5rem; font-weight:800; color:#999; text-transform:uppercase;">Tahun:</span>
                             <span style="font-weight:900; font-size:0.95rem; color:#444;">${cpMap[u].t.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function renderScoreCard(items) {
+            const cont = document.getElementById('score-card-container');
+            cont.innerHTML = "";
+
+            if (!items || items.length === 0) return;
+
+            items.forEach((item, idx) => {
+                let u = item.unit || "";
+                u = u.replace(/^\d+:/, '').trim(); // Clean up 112xx: prefix
+
+                // For Score Card, 'komponen' holds KPI KEMARIN VS HARI INI
+                // 'bobot' holds KPI BULAN LALU VS BULAN INI
+                const harian = parseFloat(item.komponen) || 0;
+                const bulanan = parseFloat(item.bobot) || 0;
+
+                const isWon = u.includes("WONOMULYO") && item.kategori === 'CP';
+                let icon = item.kategori === 'CP' ? "🏢 " : "🏪 ";
+
+                cont.innerHTML += `<div style="display:flex; flex-direction:column; padding:8px 12px; border-bottom:1px solid #f0f0f0; ${isWon ? 'background:linear-gradient(135deg, #fffcf0 0%, #fff 100%); border:1.5px solid #FDB913; border-radius:12px; margin:4px 8px; position:relative;' : 'margin: 0;'} position:relative;">
+                    ${isWon ? '<span style="position:absolute; top:-7px; left:12px; background:#FDB913; color:#fff; font-size:0.4rem; font-weight:900; padding:1px 6px; border-radius:4px; box-shadow: 0 2px 4px rgba(253, 185, 19, 0.2);">CABANG</span>' : ''}
+                    
+                    <div style="font-weight:900; font-size:0.85rem; color:var(--pgd-hijau); margin-bottom:2px; display:flex; align-items:center; gap:6px; line-height:1;">
+                        <span style="font-size:1rem;">${icon}</span>
+                        <div style="flex:1;">${u}</div>
+                        <span style="font-size:0.55rem; font-weight:900; color:#fff; background:var(--pgd-hijau); padding:2px 5px; border-radius:8px;">${item.kategori}</span>
+                    </div>
+
+                    <div style="display:flex; gap:8px; align-items:center; margin-top:3px;">
+                        <div style="display:flex; flex-direction:column; gap:1px; flex:1;">
+                            <span style="font-size:0.5rem; font-weight:800; color:#999; text-transform:uppercase;">Kmrn vs Hri Ini</span>
+                            <span style="font-weight:900; font-size:0.8rem; color:${harian >= 0 ? '#198754' : '#dc3545'};">${harian > 0 ? '+' : ''}${harian.toFixed(2)}</span>
+                        </div>
+                        <div style="height:20px; width:1px; background:#ddd;"></div>
+                        <div style="display:flex; flex-direction:column; gap:1px; flex:1; text-align:right;">
+                            <span style="font-size:0.5rem; font-weight:800; color:#999; text-transform:uppercase;">Bln Llu vs Bln Ini</span>
+                            <span style="font-weight:900; font-size:0.8rem; color:${bulanan >= 0 ? '#198754' : '#dc3545'};">${bulanan > 0 ? '+' : ''}${bulanan.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>`;
@@ -164,7 +216,10 @@
                         datalabels: {
                             anchor: 'end',
                             align: 'left',
-                            color: '#fff',
+                            color: function (context) {
+                                const v = context.dataset.data[context.dataIndex];
+                                return (v > 90 && v <= 100) ? '#000' : '#fff';
+                            },
                             font: { weight: 'bold', size: 9 },
                             formatter: v => v.toFixed(2)
                         }
