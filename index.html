@@ -112,7 +112,6 @@
                 let medal = idx === 0 ? "🥇 " : idx === 1 ? "🥈 " : idx === 2 ? "🥉 " : "🏪 ";
 
                 cont.innerHTML += `<div style="display:flex; flex-direction:column; padding:12px 15px; border-bottom:1px solid #f0f0f0; ${isWon ? 'background:linear-gradient(135deg, #fffcf0 0%, #fff 100%); border:1.5px solid #FDB913; border-radius:18px; margin:10px; position:relative;' : 'margin: 5px 0;'} position:relative;">
-                    ${isWon ? '<span style="position:absolute; top:-9px; left:15px; background:#FDB913; color:#fff; font-size:0.45rem; font-weight:900; padding:1px 8px; border-radius:5px; box-shadow: 0 2px 5px rgba(253, 185, 19, 0.2);">CABANG</span>' : ''}
                     
                     <div style="font-weight:900; font-size:0.9rem; color:var(--pgd-hijau); margin-bottom:4px; display:flex; align-items:center; gap:6px; line-height:1.2;">
                         <span style="font-size:1.1rem;">${medal}</span>
@@ -120,14 +119,14 @@
                     </div>
 
                     <div style="display:flex; gap:12px; align-items:center;">
-                        <div style="display:flex; align-items:baseline; gap:4px;">
-                            <span style="font-size:0.5rem; font-weight:800; color:#999; text-transform:uppercase;">Bulan:</span>
-                            <span style="font-weight:900; font-size:0.95rem; color:var(--pgd-hijau);">${cpMap[u].b.toFixed(2)}</span>
+                        <div style="display:flex; align-items:baseline; gap:5px;">
+                            <span style="font-size:0.55rem; font-weight:800; color:#999; text-transform:uppercase; line-height:1.2;">Bulan:</span>
+                            <span style="font-weight:900; font-size:1rem; color:var(--pgd-hijau); line-height:1.2;">${cpMap[u].b.toFixed(2)}</span>
                         </div>
                         <div style="height:12px; width:1px; background:#ddd;"></div>
-                        <div style="display:flex; align-items:baseline; gap:4px;">
-                            <span style="font-size:0.5rem; font-weight:800; color:#999; text-transform:uppercase;">Tahun:</span>
-                            <span style="font-weight:900; font-size:0.95rem; color:#444;">${cpMap[u].t.toFixed(2)}</span>
+                        <div style="display:flex; align-items:baseline; gap:5px;">
+                            <span style="font-size:0.55rem; font-weight:800; color:#999; text-transform:uppercase;">Tahun:</span>
+                            <span style="font-weight:900; font-size:0.95rem; color:#444; line-height:1.2;">${cpMap[u].t.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>`;
@@ -166,7 +165,6 @@
                 const innerBoxBg = isWon ? 'rgba(0,0,0,0.2)' : 'rgba(0,51,25,0.02)';
 
                 cont.innerHTML += `<div style="display:flex; flex-direction:column; padding:12px 16px; background:${cardBg}; border:${cardBorder}; border-radius:16px; margin:10px 12px; position:relative; box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: transform 0.3s ease;">
-                    ${isWon ? '<span style="position:absolute; top:-10px; right:16px; background:linear-gradient(45deg, #FDB913, #ffcc00); color:#003319; font-size:0.55rem; font-weight:900; padding:3px 10px; border-radius:8px; box-shadow: 0 4px 10px rgba(253, 185, 19, 0.4); letter-spacing: 0.5px;"><i class="fas fa-crown"></i> CABANG</span>' : ''}
                     
                     <div style="font-weight:900; font-size:0.95rem; color:${textColor}; margin-bottom:8px; display:flex; align-items:center; gap:8px; line-height:1.2;">
                         <span style="font-size:1.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">${icon}</span>

@@ -22,6 +22,7 @@ body {
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
+    line-height: 1.35;
 }
 
 /* LOADING OVERLAY PRO */
@@ -111,11 +112,12 @@ body {
 
 .header h1 {
     margin: 0;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     font-weight: 800;
     color: var(--pgd-hijau);
+    line-height: 1.2;
 }
 
 /* PREMIUM SCORE BAR (GLASSMORPHISM) */
@@ -165,10 +167,11 @@ body {
 }
 
 .score-info strong {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: var(--pgd-hijau);
     letter-spacing: -0.5px;
+    line-height: 1.2;
 }
 
 /* FILTER SECTION */
@@ -210,10 +213,40 @@ select {
 .kpi-card {
     background: var(--pgd-white);
     border-radius: 18px;
-    margin-bottom: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 51, 25, 0.05);
+    margin-bottom: 15px;
+    box-shadow: 0 8px 20px rgba(0, 51, 25, 0.05);
+    border: 1px solid rgba(0, 51, 25, 0.03);
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kpi-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 51, 25, 0.08);
+}
+
+/* PREMIUM SECTION HEADER */
+.section-pro-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 25px 0 12px 5px;
+    padding-left: 12px;
+    border-left: 4px solid var(--pgd-gold);
+}
+
+.section-pro-header i {
+    color: var(--pgd-gold);
+    font-size: 0.9rem;
+    filter: drop-shadow(0 2px 4px rgba(253, 185, 19, 0.3));
+}
+
+.section-pro-header span {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .kpi-header {

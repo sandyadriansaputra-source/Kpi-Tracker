@@ -171,22 +171,22 @@
                 return `
                 <div class="kpi-card">
                     <div class="kpi-card-header">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <i class="fas fa-dot-circle" style="color:var(--pgd-gold)"></i> 
-                            <strong>${i.komponen}</strong>
+                        <div style="display:flex; align-items:center; gap:6px; line-height:1.2;">
+                            <i class="fas fa-dot-circle" style="color:var(--pgd-gold); font-size:0.65rem;"></i> 
+                            <strong style="font-size:0.85rem;">${i.komponen}</strong>
                         </div>
                         <div class="help-icon-btn" onclick="showHelp('${i.komponen.replace(/'/g, "\\'")}', '${(i.keterangan || 'Belum ada detail untuk komponen ini.').replace(/'/g, "\\'")}')">
                             <i class="fas fa-question"></i>
                         </div>
                     </div>
                     <div style="padding:10px 15px;">
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:3px 0; border-bottom:1px dashed #eee; margin-bottom:5px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:3px 0; border-bottom:1px dashed #eee; margin-bottom:5px; line-height:1.2;">
                             <span style="color:#777;">Bobot Target / Pencapaian</span>
                             <span style="font-weight:800; color:var(--pgd-hijau);">${parseFloat(i.bobot).toFixed(2)} / ${parseFloat(i.nilaiKpi).toFixed(2)}</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Target</span><span style="font-weight:800;">${keepDecimals ? Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Realisasi</span><span style="font-weight:800;">${keepDecimals ? Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0;"><span>Kurang</span><span style="font-weight:800; color:${gap > 0 ? 'red' : 'green'}">${keepDecimals ? Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0; line-height:1.2;"><span>Target</span><span style="font-weight:800;">${keepDecimals ? Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0; line-height:1.2;"><span>Realisasi</span><span style="font-weight:800;">${keepDecimals ? Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding:2px 0; line-height:1.2;"><span>Kurang</span><span style="font-weight:800; color:${gap > 0 ? 'red' : 'green'}">${keepDecimals ? Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span></div>
                         <div class="input-group"><input type="number" id="in-${i.rowIdx}" placeholder="Input"><button class="btn-save" onclick="updateData(this, ${i.rowIdx})">SAVE</button></div>
                     </div>
                     <div style="padding:8px 15px; background:#fff;">

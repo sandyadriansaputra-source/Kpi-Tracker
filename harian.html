@@ -179,9 +179,9 @@
                 return `
                 <div class="kpi-card" data-idx="${i.rowIdx}" style="border-left: 5px solid ${barColor};">
                     <div class="kpi-card-header">
-                        <div>
+                        <div style="line-height:1.2;">
                             <span style="font-size:0.6rem; font-weight:900; color:#999; text-transform:uppercase;">${i.unit}</span>
-                            <div style="font-weight:800; font-size:0.8rem; color:var(--pgd-hijau);">${i.komponen}</div>
+                            <div style="font-weight:900; font-size:0.85rem; color:var(--pgd-hijau);">${i.komponen}</div>
                         </div>
                         <div class="help-icon-btn" onclick="showHelp('${i.komponen.replace(/'/g, "\\'")}', '${(i.keterangan || 'Belum ada detail untuk komponen ini.').replace(/'/g, "\\'")}')">
                             <i class="fas fa-question"></i>
@@ -197,11 +197,11 @@
                             <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TOTAL REALISASI</span>
                             <span class="val-real" style="font-size:0.75rem; font-weight:800;">${keepDecimals ? Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.realisasi).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
-                        <div style="border-top: 1px dashed #eee; padding-top:8px;">
+                        <div style="border-top: 1px dashed #eee; padding-top:6px;">
                             <span style="font-size:0.55rem; font-weight:700; color:${gap > 0 ? 'red' : 'green'}; display:block;">KEKURANGAN</span>
                             <span class="val-sisa" style="font-size:0.85rem; font-weight:900; color:${gap > 0 ? 'red' : 'green'};">${keepDecimals ? Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Math.abs(gap).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
-                        <div style="border-top: 1px dashed #eee; padding-top:8px;">
+                        <div style="border-top: 1px dashed #eee; padding-top:6px;">
                             <span style="font-size:0.55rem; font-weight:700; color:#198754; display:block;">UPDATE HARI INI</span>
                             <span class="val-update" style="font-size:0.85rem; font-weight:900; color:var(--pgd-hijau);">
                                 ${updateHariIni > 0 ? '+' + updateHariIni.toLocaleString('id-ID') : '0'}
@@ -215,9 +215,9 @@
                     </div>
 
                     <div style="padding:10px 15px; background:#fff; border-top:1px solid #f0f0f0;">
-                        <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:900; color:#999; margin-bottom:5px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.6rem; font-weight:900; color:#999; margin-bottom:4px;">
                             <span>ACHIEVEMENT</span>
-                            <span class="val-persen" style="color:var(--pgd-hijau); font-size:0.75rem;">${ach.toFixed(2)}%</span>
+                            <span class="val-persen" style="color:var(--pgd-hijau); font-size:0.75rem; line-height:1.2;">${ach.toFixed(2)}%</span>
                         </div>
                         <div style="background:#eee; height:6px; border-radius:10px; overflow:hidden;">
                             <div class="progress-fill" style="height:100%; width:${Math.min(ach, 100)}%; background:${barColor}; transition: 1s ease;"></div>
