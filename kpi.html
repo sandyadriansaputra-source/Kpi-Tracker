@@ -139,7 +139,7 @@
             // 2. SORTING (PENCAPAIAN TERTINGGI KE TERENDAH)
             // Gunakan parseFloat untuk memastikan angka persentase terbaca benar
             filtered.sort((a, b) => {
-                return parseFloat(b.persentase) - parseFloat(a.persentase);
+                return parseFloat(a.persentase) - parseFloat(b.persentase);
             });
 
             // 3. HITUNG TOTAL SKOR KPI (DARI DATA YANG SUDAH TERFILTER & TERSORTIR)

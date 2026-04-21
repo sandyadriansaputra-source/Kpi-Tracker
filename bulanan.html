@@ -136,10 +136,10 @@
             // 1. FILTER DATA BERDASARKAN UNIT & KATEGORI
             let filtered = rawData.filter(d => (k === "ALL" || d.kategori.includes(k)) && (u === "ALL" || d.unit.includes(u)));
 
-            // 2. SORTING (PENCAPAIAN TERTINGGI KE TERENDAH)
+            // 2. SORTING (PENCAPAIAN TERENDAH KE TERBESAR)
             // Gunakan parseFloat untuk memastikan angka persentase terbaca benar
             filtered.sort((a, b) => {
-                return parseFloat(b.persentase) - parseFloat(a.persentase);
+                return parseFloat(a.persentase) - parseFloat(b.persentase);
             });
 
             // 3. HITUNG TOTAL SKOR KPI (DARI DATA YANG SUDAH TERFILTER & TERSORTIR)
