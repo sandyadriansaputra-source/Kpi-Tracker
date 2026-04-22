@@ -37,8 +37,9 @@
     </div>
 
     <div class="filter-section">
-        <select id="sel-sheet" onchange="init()">
-            <option value="UPDATE DATA HARIAN">HARIAN</option>
+        <select id="sel-target" onchange="filter()">
+            <option value="bulanan">TARGET BULANAN</option>
+            <option value="tahunan">TARGET TAHUNAN</option>
         </select>
         <select id="sel-unit" onchange="filter()">
             <option value="all">UNIT: SEMUA</option>
@@ -74,7 +75,7 @@
 
         async function init() {
             showLoader();
-            const sheet = document.getElementById('sel-sheet').value;
+            const sheet = 'UPDATE DATA HARIAN';
             try {
                 const res = await fetch(`${API}?action=read&sheet=${encodeURIComponent(sheet)}&t=${Date.now()}`).then(r => r.json());
                 raw = res.items || [];
@@ -86,7 +87,7 @@
         function closeConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; }
 
         async function hardReset() {
-            const sheet = document.getElementById('sel-sheet').value;
+            const sheet = 'UPDATE DATA HARIAN';
             const modal = document.getElementById('confirm-overlay');
             const confirmBtn = document.getElementById('btn-confirm-action');
             const confirmText = document.getElementById('confirm-text');
@@ -134,7 +135,14 @@
                     (d.kategori && d.kategori.includes("UPC")) &&
                     (!d.komponen || !d.komponen.toUpperCase().includes("LABA USAHA"))
                 );
-                displayList.sort((a, b) => parseFloat(a.persentase) - parseFloat(b.persentase));
+                const targetMode = document.getElementById('sel-target').value;
+                displayList.sort((a, b) => {
+                    const targetA = targetMode === 'tahunan' ? parseFloat(a.targetThn) || 0 : parseFloat(a.targetBln || a.target) || 0;
+                    const targetB = targetMode === 'tahunan' ? parseFloat(b.targetThn) || 0 : parseFloat(b.targetBln || b.target) || 0;
+                    const achA = targetA > 0 ? (a.realisasi / targetA) * 100 : 0;
+                    const achB = targetB > 0 ? (b.realisasi / targetB) * 100 : 0;
+                    return achA - achB;
+                });
             }
 
             document.getElementById('summary-area').style.display = 'flex';
@@ -150,9 +158,12 @@
                 return;
             }
 
+            const targetMode = document.getElementById('sel-target').value;
+
             cont.innerHTML = data.map(i => {
-                const ach = parseFloat(i.persentase) || 0;
-                let gap = i.target - i.realisasi;
+                const activeTarget = targetMode === 'tahunan' ? parseFloat(i.targetThn) || 0 : parseFloat(i.targetBln || i.target) || 0;
+                const ach = activeTarget > 0 ? (i.realisasi / activeTarget) * 100 : 0;
+                let gap = activeTarget - i.realisasi;
                 const cmp = i.komponen ? i.komponen.toLowerCase() : "";
 
                 if (cmp.includes("delta osl pencairan gadai") || cmp.includes("delta osl pencairan non gadai")) {
@@ -161,7 +172,7 @@
                     const todayDate = today.getDate();
                     let sisaHari = endOfMonth.getDate() - todayDate;
                     if (sisaHari <= 0) sisaHari = 1; // mencegah division by zero
-                    gap = ((((i.target * 30) - (i.realisasi * todayDate)) / sisaHari) - i.realisasi) / 7;
+                    gap = ((((activeTarget * 30) - (i.realisasi * todayDate)) / sisaHari) - i.realisasi) / 7;
                 }
 
                 const updateHariIni = i.realisasi - i.saldoAwal;
@@ -191,7 +202,7 @@
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:12px 15px;">
                         <div>
                             <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TARGET</span>
-                            <span style="font-size:0.75rem; font-weight:800;">${keepDecimals ? Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(i.target).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
+                            <span style="font-size:0.75rem; font-weight:800;">${keepDecimals ? Number(activeTarget).toLocaleString('id-ID', { maximumFractionDigits: 2 }) : Number(activeTarget).toLocaleString('id-ID', { maximumFractionDigits: 0 })}</span>
                         </div>
                         <div>
                             <span style="font-size:0.55rem; font-weight:700; color:#aaa; display:block;">TOTAL REALISASI</span>
@@ -234,7 +245,7 @@
 
             const originalText = btn.innerText;
             btn.innerText = "...";
-            const sheet = document.getElementById('sel-sheet').value;
+            const sheet = 'UPDATE DATA HARIAN';
 
             try {
                 await fetch(API, {
@@ -249,11 +260,12 @@
                 const item = raw.find(d => d.rowIdx == idx);
                 if (item) {
                     item.realisasi = parseFloat(item.realisasi) + val;
-                    const target = parseFloat(item.target);
-                    const newPersen = target > 0 ? ((item.realisasi / target) * 100).toFixed(2) : 0;
+                    const targetMode = document.getElementById('sel-target').value;
+                    const activeTarget = targetMode === 'tahunan' ? parseFloat(item.targetThn) || 0 : parseFloat(item.targetBln || item.target) || 0;
+                    const newPersen = activeTarget > 0 ? ((item.realisasi / activeTarget) * 100).toFixed(2) : 0;
                     item.persentase = newPersen;
 
-                    let sisaRaw = target - item.realisasi;
+                    let sisaRaw = activeTarget - item.realisasi;
                     const cmpLower = item.komponen ? item.komponen.toLowerCase() : "";
                     if (cmpLower.includes("delta osl pencairan gadai") || cmpLower.includes("delta osl pencairan non gadai")) {
                         const today = new Date();
@@ -261,7 +273,7 @@
                         const todayDate = today.getDate();
                         let sisaHari = endOfMonth.getDate() - todayDate;
                         if (sisaHari <= 0) sisaHari = 1;
-                        sisaRaw = ((((target * 30) - (item.realisasi * todayDate)) / sisaHari) - item.realisasi) / 7;
+                        sisaRaw = ((((activeTarget * 30) - (item.realisasi * todayDate)) / sisaHari) - item.realisasi) / 7;
                     }
                     const sisa = Math.max(0, sisaRaw);
                     const diff = item.realisasi - item.saldoAwal;
