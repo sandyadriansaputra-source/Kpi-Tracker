@@ -139,8 +139,8 @@
                 displayList.sort((a, b) => {
                     const targetA = targetMode === 'tahunan' ? parseFloat(a.targetThn) || 0 : parseFloat(a.targetBln || a.target) || 0;
                     const targetB = targetMode === 'tahunan' ? parseFloat(b.targetThn) || 0 : parseFloat(b.targetBln || b.target) || 0;
-                    const achA = targetA > 0 ? (a.realisasi / targetA) * 100 : 0;
-                    const achB = targetB > 0 ? (b.realisasi / targetB) * 100 : 0;
+                    const achA = targetA > 0 ? (a.realisasi / targetA) * 110 : 0;
+                    const achB = targetB > 0 ? (b.realisasi / targetB) * 110 : 0;
                     return achA - achB;
                 });
             }
@@ -162,7 +162,7 @@
 
             cont.innerHTML = data.map(i => {
                 const activeTarget = targetMode === 'tahunan' ? parseFloat(i.targetThn) || 0 : parseFloat(i.targetBln || i.target) || 0;
-                const ach = activeTarget > 0 ? (i.realisasi / activeTarget) * 100 : 0;
+                const ach = activeTarget > 0 ? (i.realisasi / activeTarget) * 110 : 0;
                 let gap = activeTarget - i.realisasi;
                 const cmp = i.komponen ? i.komponen.toLowerCase() : "";
 
@@ -262,7 +262,7 @@
                     item.realisasi = parseFloat(item.realisasi) + val;
                     const targetMode = document.getElementById('sel-target').value;
                     const activeTarget = targetMode === 'tahunan' ? parseFloat(item.targetThn) || 0 : parseFloat(item.targetBln || item.target) || 0;
-                    const newPersen = activeTarget > 0 ? ((item.realisasi / activeTarget) * 100).toFixed(2) : 0;
+                    const newPersen = activeTarget > 0 ? ((item.realisasi / activeTarget) * 110).toFixed(2) : 0;
                     item.persentase = newPersen;
 
                     let sisaRaw = activeTarget - item.realisasi;
